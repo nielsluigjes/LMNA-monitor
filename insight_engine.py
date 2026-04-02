@@ -54,6 +54,25 @@ _THEME_PATIENT_BLURB: dict[str, str] = {
     "imaging": "Over echo, hart-MRI of andere beeldvorming.",
 }
 
+# Eén zin op kaarten: waarom dit item kan aansluiten (zelfde id als _THEMES)
+_READER_NOTE_BY_THEME: dict[str, str] = {
+    "dcm": "Dit lijkt vooral te gaan over een zwakker wordend hart of hartfalen.",
+    "conduction": "Dit lijkt vooral te gaan over geleiding van de hartprikkel of over ritme.",
+    "lmna": "Dit gaat expliciet over LMNA of lamin — vaak dicht bij de oorzaak van de aandoening.",
+    "therapy": "Dit gaat waarschijnlijk over behandeling, medicijnen of nieuwe therapieën in onderzoek.",
+    "imaging": "Dit gaat waarschijnlijk over echo, hart-MRI of vergelijkbare onderzoeken.",
+}
+
+_READER_NOTE_FALLBACK = (
+    "Het onderwerp is niet scherp in één hokje te plaatsen; lees de titel of open de bron "
+    "als je wilt beoordelen of het voor jou interessant is."
+)
+
+_RECRUITING_TRIAL_NOTE = (
+    "Deze studie staat open voor werving — meedoen kan alleen via de officiële studiepagina "
+    "en na overleg met je arts."
+)
+
 # thema-id, weergavenaam NL, zoekfragmenten (kleine letters)
 _THEMES: list[tuple[str, str, tuple[str, ...]]] = [
     ("dcm", "DCM / cardiomyopathie", ("dilated", "cardiomyopathy", "heart failure", "lvef", "systolic", " hf", "dcm")),
@@ -99,6 +118,13 @@ def _theme_labels(ids: list[str]) -> list[str]:
     return [m[i] for i in ids if i in m]
 
 
+def _reader_note_nl(primary: str | None, *, recruiting_trial: bool = False) -> str:
+    base = _READER_NOTE_BY_THEME.get(primary or "", _READER_NOTE_FALLBACK)
+    if recruiting_trial:
+        return f"{base} {_RECRUITING_TRIAL_NOTE}"
+    return base
+
+
 def enrich_publication(p: dict[str, Any]) -> dict[str, Any]:
     text = _norm_text(p.get("title"), p.get("abstract"), p.get("journal"))
     rel = relevance_score(text)
@@ -108,6 +134,7 @@ def enrich_publication(p: dict[str, Any]) -> dict[str, Any]:
     out["theme_ids"] = tids
     out["theme_labels"] = _theme_labels(tids)
     out["primary_theme"] = primary
+    out["reader_note_nl"] = _reader_note_nl(primary, recruiting_trial=False)
     return out
 
 
@@ -122,6 +149,7 @@ def enrich_trial(t: dict[str, Any]) -> dict[str, Any]:
     out["theme_ids"] = tids
     out["theme_labels"] = _theme_labels(tids)
     out["primary_theme"] = primary
+    out["reader_note_nl"] = _reader_note_nl(primary, recruiting_trial=recruiting)
     return out
 
 
@@ -134,6 +162,7 @@ def enrich_news(n: dict[str, Any]) -> dict[str, Any]:
     out["theme_ids"] = tids
     out["theme_labels"] = _theme_labels(tids)
     out["primary_theme"] = primary
+    out["reader_note_nl"] = _reader_note_nl(primary, recruiting_trial=False)
     return out
 
 
@@ -183,9 +212,10 @@ def build_digest(
         )
 
     overview_line = (
-        f"In de tabs staan {len(news)} nieuwsberichten, {len(pubs)} publicaties en "
-        f"{len(trials)} studies (uit de database). Je hoeft niet alles te lezen: "
-        f"gebruik zoeken en de snelknoppen om te vernauwen."
+        f"Hier staan {len(news)} nieuwsberichten, {len(pubs)} publicaties en {len(trials)} studies "
+        f"— verzameld uit openbare bronnen. Je hoeft echt niet alles te lezen: "
+        f"begin gerust bij Nieuws of bij de kantlijn ‘Waar begin je?’, en gebruik zoeken en snelknoppen "
+        f"om te vernauwen naar wat bij jou past."
     )
     recruiting_note: str | None = None
     if recruiting:
@@ -203,8 +233,9 @@ def build_digest(
                 "dit is geen aanbeveling om mee te doen."
             )
     themes_intro = (
-        "Onderwerpen waarin de publicaties in dit scherm vaak passen. "
-        "De indeling is automatisch (op woorden in titel en samenvatting)."
+        "Hieronder staan een paar veelvoorkomende onderwerpen onder de publicaties. "
+        "De groepering is automatisch (op woorden in titel en tekst) — geen medische indeling, "
+        "maar wel handig om te oriënteren."
     )
     empty_themes_note: str | None = None
     if not theme_rows:
@@ -218,8 +249,8 @@ def build_digest(
 
     return {
         "method_note": (
-            "Geen medisch advies. Onderstaande tips zijn automatisch gemaakt op basis van woorden in titels en teksten — "
-            "open altijd de originele bron."
+            "Geen medisch advies. Wat je hier leest is automatisch geordend op woorden die passen bij LMNA en het hart; "
+            "op elke kaart staat een korte zin voor lezers. Controleer altijd in de originele bron."
         ),
         "overview_line": overview_line,
         "recruiting_note": recruiting_note,
