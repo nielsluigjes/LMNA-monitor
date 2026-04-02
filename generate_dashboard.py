@@ -359,38 +359,38 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 <div class="stats-bar">
   <div class="stat">
+    <div class="stat-num" id="stat-news">—</div>
+    <div class="stat-label">News</div>
+  </div>
+  <div class="stat">
     <div class="stat-num" id="stat-pubs">—</div>
     <div class="stat-label">Publications</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num" id="stat-trials">—</div>
+    <div class="stat-label">Trials</div>
   </div>
   <div class="stat">
     <div class="stat-num green" id="stat-recruiting">—</div>
     <div class="stat-label">Recruiting Trials</div>
   </div>
-  <div class="stat">
-    <div class="stat-num" id="stat-trials">—</div>
-    <div class="stat-label">Total Trials</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num" id="stat-news">—</div>
-    <div class="stat-label">News Items</div>
-  </div>
 </div>
 
 <div class="tabs">
-  <button class="tab active" onclick="switchTab('publications', this)">Publications</button>
+  <button class="tab active" onclick="switchTab('news', this)">News</button>
   <button class="tab" onclick="switchTab('trials', this)">Clinical Trials</button>
-  <button class="tab" onclick="switchTab('news', this)">News</button>
+  <button class="tab" onclick="switchTab('publications', this)">Publications</button>
 </div>
 
 <main>
 
-<!-- PUBLICATIONS -->
-<div id="panel-publications" class="panel active">
+<!-- NEWS -->
+<div id="panel-news" class="panel active">
   <div class="search-bar">
-    <input type="text" id="search-pubs" placeholder="Search titles, authors, abstracts..." oninput="filterPubs()">
+    <input type="text" id="search-news" placeholder="Search news..." oninput="filterNews()">
   </div>
-  <div class="result-count" id="count-pubs"></div>
-  <div class="card-grid" id="pubs-list"></div>
+  <div class="result-count" id="count-news"></div>
+  <div class="card-grid" id="news-list"></div>
 </div>
 
 <!-- TRIALS -->
@@ -403,13 +403,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <div class="trial-grid" id="trials-list"></div>
 </div>
 
-<!-- NEWS -->
-<div id="panel-news" class="panel">
+<!-- PUBLICATIONS -->
+<div id="panel-publications" class="panel">
   <div class="search-bar">
-    <input type="text" id="search-news" placeholder="Search news..." oninput="filterNews()">
+    <input type="text" id="search-pubs" placeholder="Search titles, authors, abstracts..." oninput="filterPubs()">
   </div>
-  <div class="result-count" id="count-news"></div>
-  <div class="card-grid" id="news-list"></div>
+  <div class="result-count" id="count-pubs"></div>
+  <div class="card-grid" id="pubs-list"></div>
 </div>
 
 </main>

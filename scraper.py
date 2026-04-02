@@ -20,20 +20,20 @@ DB_PATH = Path(__file__).parent / "lmna.db"
 # ── Search terms ────────────────────────────────────────────────────────────
 PUBMED_QUERY = (
     '(LMNA[tiab] OR lamin A[tiab] OR laminopathy[tiab] OR laminopathies[tiab]) '
-    'AND (cardiomyopathy[tiab] OR arrhythmia[tiab] OR cardiac[tiab] OR heart[tiab] '
-    'OR "dilated cardiomyopathy"[tiab] OR "heart failure"[tiab]) '
-    'AND ("last 1 year"[edat])'
+    'AND ("dilated cardiomyopathy"[tiab] OR "dilaterende cardiomyopathie"[tiab] '
+    'OR "AV block"[tiab] OR "atrioventricular block"[tiab] OR "heart block"[tiab] '
+    'OR bradycardia[tiab] OR bradyarrhythmia[tiab] OR "conduction disease"[tiab] '
+    'OR "conduction system"[tiab] OR "DCM"[tiab]) '
+    'AND ("last 2 years"[edat])'
 )
 
-CLINICALTRIALS_QUERY = "LMNA cardiomyopathy"
+CLINICALTRIALS_QUERY = "LMNA dilated cardiomyopathy AV block"
 
 NEWS_RSS_FEEDS = [
-    "https://pubmed.ncbi.nlm.nih.gov/rss/search/?term=LMNA+cardiac&format=rss",
-    "https://www.cardiologytoday.com/rss",
-    "https://www.heart.org/rss",
-    # Google News (no key needed)
-    "https://news.google.com/rss/search?q=LMNA+cardiomyopathy&hl=en-US&gl=US&ceid=US:en",
-    "https://news.google.com/rss/search?q=laminopathy+cardiac&hl=en-US&gl=US&ceid=US:en",
+    "https://pubmed.ncbi.nlm.nih.gov/rss/search/?term=LMNA+dilated+cardiomyopathy+AV+block&format=rss",
+    "https://news.google.com/rss/search?q=LMNA+dilated+cardiomyopathy&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=LMNA+AV+block+bradycardia&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=laminopathy+cardiomyopathy&hl=en-US&gl=US&ceid=US:en",
 ]
 
 # ── DB setup ─────────────────────────────────────────────────────────────────
