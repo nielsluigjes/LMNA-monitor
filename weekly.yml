@@ -1,0 +1,48 @@
+name: Weekly LMNA Scrape & Deploy
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'   # Elke maandag 07:00 UTC
+  workflow_dispatch:        # Handmatig starten via GitHub UI
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  scrape-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests feedparser
+
+      - name: Run scraper
+        run: python scraper.py
+
+      - name: Generate dashboard
+        run: python generate_dashboard.py
+
+      - name: Commit database (zodat data bewaard blijft)
+        run: |
+          git config user.name "LMNA Bot"
+          git config user.email "bot@lmna-monitor"
+          git add lmna.db dashboard.html
+          git diff --cached --quiet || git commit -m "Weekly update $(date +'%Y-%m-%d')"
+          git push
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
