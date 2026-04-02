@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
 LMNA Cardiac Disease Monitor — Scraper
-Fetches: PubMed, ClinicalTrials.gov, NewsAPI / RSS feeds
-Run manually or via cron: 0 8 * * 1 python3 scraper.py
+Fetches: PubMed, ClinicalTrials.gov (wereldwijd + NL/DE/BE-locaties), RSS feeds
+Run manually or via cron: 0 7 * * * python3 scraper.py  (dagelijks 07:00, lokaal)
 """
 
 import sqlite3
@@ -29,11 +29,22 @@ PUBMED_QUERY = (
 
 CLINICALTRIALS_QUERY = "LMNA dilated cardiomyopathy AV block"
 
+# ClinicalTrials.gov: studies met minstens één site in NL, DE of BE (naast wereldwijde zoekterm)
+EU_BENELUX_DACH_LOCATIONS = (
+    "(AREA[LocationCountry]Netherlands OR AREA[LocationCountry]Germany OR "
+    "AREA[LocationCountry]Belgium)"
+)
+
 NEWS_RSS_FEEDS = [
     "https://pubmed.ncbi.nlm.nih.gov/rss/search/?term=LMNA+dilated+cardiomyopathy+AV+block&format=rss",
     "https://news.google.com/rss/search?q=LMNA+dilated+cardiomyopathy&hl=en-US&gl=US&ceid=US:en",
     "https://news.google.com/rss/search?q=LMNA+AV+block+bradycardia&hl=en-US&gl=US&ceid=US:en",
     "https://news.google.com/rss/search?q=laminopathy+cardiomyopathy&hl=en-US&gl=US&ceid=US:en",
+    # EU — regionaal nieuws (NL / DE / BE)
+    "https://news.google.com/rss/search?q=LMNA+laminopathie+cardiomyopathie&hl=nl&gl=NL&ceid=NL:nl",
+    "https://news.google.com/rss/search?q=LMNA+Kardiomyopathie&hl=de&gl=DE&ceid=DE:de",
+    "https://news.google.com/rss/search?q=LMNA+cardiomyopathie&hl=nl&gl=BE&ceid=BE:nl",
+    "https://news.google.com/rss/search?q=LMNA+cardiomyopathie&hl=fr&gl=BE&ceid=BE:fr",
 ]
 
 # ── DB setup ─────────────────────────────────────────────────────────────────
@@ -141,59 +152,92 @@ def fetch_pubmed(con, max_results=50):
     time.sleep(0.4)  # NCBI rate limit
 
 # ── ClinicalTrials ────────────────────────────────────────────────────────────
+def _upsert_trial_from_study(cur, study):
+    """Parse one CT.gov v2 study object; returns True if a row was written."""
+    ps = study.get("protocolSection", {})
+    id_mod   = ps.get("identificationModule", {})
+    stat_mod = ps.get("statusModule", {})
+    arms_mod = ps.get("armsInterventionsModule", {})
+    cond_mod = ps.get("conditionsModule", {})
+    locs_mod = ps.get("contactsLocationsModule", {})
+
+    nct_id     = id_mod.get("nctId", "")
+    if not nct_id:
+        return False
+    title      = id_mod.get("briefTitle", "")
+    status     = stat_mod.get("overallStatus", "")
+    phase      = ", ".join(ps.get("designModule", {}).get("phases", []))
+    conditions = ", ".join(cond_mod.get("conditions", []))
+    interventions = ", ".join(
+        i.get("interventionName", "") for i in arms_mod.get("interventions", [])[:5]
+    )
+    start_date = stat_mod.get("startDateStruct", {}).get("date", "")
+    primary_end = stat_mod.get("primaryCompletionDateStruct", {}).get("date", "")
+    locs = locs_mod.get("locations") or []
+    locations  = ", ".join(sorted({
+        l.get("locationCountry", "") for l in locs if l.get("locationCountry")
+    }))
+    trial_url  = f"https://clinicaltrials.gov/study/{nct_id}"
+
+    cur.execute("""
+        INSERT OR REPLACE INTO trials
+        (nct_id, title, status, phase, conditions, interventions,
+         start_date, primary_end, locations, url, fetched_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (nct_id, title, status, phase, conditions, interventions,
+          start_date, primary_end, locations, trial_url,
+          datetime.now().isoformat()))
+    return cur.rowcount > 0
+
+
 def fetch_trials(con):
     print("🔬 Fetching ClinicalTrials.gov...")
     url = "https://clinicaltrials.gov/api/v2/studies"
-    params = {
+    base = {
         "query.cond": "LMNA cardiomyopathy",
-        "query.term": "LMNA laminopathy cardiac",
         "pageSize": 100,
         "format": "json",
-        "fields": "NCTId,BriefTitle,OverallStatus,Phase,Condition,InterventionName,StartDate,PrimaryCompletionDate,LocationCountry"
+        "fields": (
+            "NCTId,BriefTitle,OverallStatus,Phase,Condition,InterventionName,"
+            "StartDate,PrimaryCompletionDate,LocationCountry"
+        ),
     }
-    r = requests.get(url, params=params, timeout=30)
-    r.raise_for_status()
-    data = r.json()
+    # Twee passes: wereldwijd, en expliciet met site in NL / DE / BE (EU-prioriteit)
+    passes = [
+        ("wereldwijd", {**base, "query.term": "LMNA laminopathy cardiac"}),
+        (
+            "locaties NL · DE · BE",
+            {
+                **base,
+                "query.term": f"LMNA laminopathy cardiac {EU_BENELUX_DACH_LOCATIONS}",
+            },
+        ),
+    ]
 
     cur = con.cursor()
-    new = 0
-    for study in data.get("studies", []):
-        ps = study.get("protocolSection", {})
-        id_mod   = ps.get("identificationModule", {})
-        stat_mod = ps.get("statusModule", {})
-        desc_mod = ps.get("descriptionModule", {})
-        arms_mod = ps.get("armsInterventionsModule", {})
-        cond_mod = ps.get("conditionsModule", {})
-        locs_mod = ps.get("contactsLocationsModule", {})
-
-        nct_id     = id_mod.get("nctId", "")
-        title      = id_mod.get("briefTitle", "")
-        status     = stat_mod.get("overallStatus", "")
-        phase      = ", ".join(ps.get("designModule", {}).get("phases", []))
-        conditions = ", ".join(cond_mod.get("conditions", []))
-        interventions = ", ".join(
-            i.get("interventionName", "") for i in arms_mod.get("interventions", [])[:5]
-        )
-        start_date = stat_mod.get("startDateStruct", {}).get("date", "")
-        primary_end = stat_mod.get("primaryCompletionDateStruct", {}).get("date", "")
-        locations  = ", ".join(set(
-            l.get("locationCountry", "") for l in locs_mod.get("locations", [])[:10]
-        ))
-        trial_url  = f"https://clinicaltrials.gov/study/{nct_id}"
-
-        cur.execute("""
-            INSERT OR REPLACE INTO trials
-            (nct_id, title, status, phase, conditions, interventions,
-             start_date, primary_end, locations, url, fetched_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (nct_id, title, status, phase, conditions, interventions,
-              start_date, primary_end, locations, trial_url,
-              datetime.now().isoformat()))
-        if cur.rowcount:
-            new += 1
+    seen_nct = set()
+    upserted = 0
+    for label, params in passes:
+        r = requests.get(url, params=params, timeout=30)
+        r.raise_for_status()
+        data = r.json()
+        studies = data.get("studies", [])
+        new_in_pass = 0
+        for study in studies:
+            nct = (study.get("protocolSection") or {}).get("identificationModule", {}).get("nctId")
+            if nct and nct in seen_nct:
+                continue
+            if _upsert_trial_from_study(cur, study):
+                upserted += 1
+            if nct:
+                seen_nct.add(nct)
+            new_in_pass += 1
+        dup = len(studies) - new_in_pass
+        extra = f", {dup} overlap met eerdere pass" if dup else ""
+        print(f"  · {label}: {len(studies)} uit API ({new_in_pass} nieuw{extra})")
 
     con.commit()
-    print(f"  ✓ {new} trials upserted")
+    print(f"  ✓ {upserted} trials upserted ({len(seen_nct)} unieke NCT-id’s)")
 
 # ── News (RSS) ────────────────────────────────────────────────────────────────
 def fetch_news(con):
