@@ -772,16 +772,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin-bottom: 16px;
     flex-wrap: wrap;
   }
-  .rel-chip {
-    display: inline-block;
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--accent3);
-    border: 1px solid rgba(245,196,91,0.35);
-    padding: 2px 8px;
-    border-radius: 2px;
+  .card-reader-note {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.55;
+    margin: 0 0 12px;
+    max-width: 52rem;
+  }
+  .card-reader-note-label {
+    font-weight: 500;
+    color: var(--prose-dim);
     margin-right: 6px;
-    vertical-align: middle;
   }
   .theme-chip {
     display: inline-block;
@@ -908,6 +909,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
           </div>
         </dl>
       </section>
+      <section class="intro-detail-section" aria-labelledby="intro-read-title">
+        <h3 id="intro-read-title" class="intro-detail-title">Hoe lees je dit scherm?</h3>
+        <ul class="intro-detail-list">
+          <li>Veel titels en teksten zijn <strong>Engels</strong> — dat hoort zo bij wetenschap en nieuws. Moeilijke woorden zijn normaal; je hoeft niet alles te begrijpen.</li>
+          <li>Begin desgewenst bij <strong>Nieuws</strong> of bij <strong>Studies</strong> waar “werving” open staat; publicaties zijn vaak het zwaarst.</li>
+          <li>Open een <strong>abstract</strong> (samenvatting) alleen als je dieper wilt lezen — en bespreek altijd met je arts wat voor jou klopt.</li>
+        </ul>
+      </section>
     </div>
   </details>
 </section>
@@ -933,7 +942,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <div class="dashboard-split">
 <section class="insights" aria-labelledby="insights-heading">
   <h2 id="insights-heading">Waar begin je?</h2>
-  <p class="insights-sub">Korte oriëntatie — geen medisch advies. Gebruik de tabs links om nieuws, publicaties en studies te bekijken.</p>
+  <p class="insights-sub">Korte oriëntatie in gewone taal — geen medisch advies. Links in de tabs vind je het nieuws, de publicaties en de studies.</p>
   <p class="insights-method" id="insights-method"></p>
   <div id="insights-body"></div>
 </section>
@@ -951,7 +960,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <div id="panel-news" class="panel active">
   <div class="sort-row" aria-label="Sorteer nieuws">
     <span class="chip-label">Sorteer</span>
-    <button type="button" class="filter-btn active" onclick="setNewsSort('relevance', this)">Relevantie</button>
+    <button type="button" class="filter-btn active" onclick="setNewsSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
     <button type="button" class="filter-btn" onclick="setNewsSort('date', this)">Recent</button>
   </div>
   <div class="chip-row" aria-label="Snel zoeken nieuws">
@@ -973,7 +982,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <div id="panel-publications" class="panel">
   <div class="sort-row" aria-label="Sorteer publicaties">
     <span class="chip-label">Sorteer</span>
-    <button type="button" class="filter-btn active" onclick="setPubSort('relevance', this)">Relevantie</button>
+    <button type="button" class="filter-btn active" onclick="setPubSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
     <button type="button" class="filter-btn" onclick="setPubSort('date', this)">Recent</button>
   </div>
   <div class="chip-row" aria-label="Snel zoeken publicaties">
@@ -995,10 +1004,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 <!-- TRIALS -->
 <div id="panel-trials" class="panel">
-  <p class="panel-hint"><strong>RECRUITING</strong> = studie zoekt deelnemers (geen aanbeveling; bespreek met je arts).</p>
+  <p class="panel-hint">Een studie met status <strong>RECRUITING</strong> zoekt op dit moment deelnemers. Dat is géén aanbeveling om mee te doen — bespreek het met je arts en meld je alleen via de officiële studiepagina.</p>
   <div class="sort-row" aria-label="Sorteer studies">
     <span class="chip-label">Sorteer</span>
-    <button type="button" class="filter-btn active" onclick="setTrialSort('relevance', this)">Relevantie</button>
+    <button type="button" class="filter-btn active" onclick="setTrialSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
     <button type="button" class="filter-btn" onclick="setTrialSort('date', this)">Startdatum</button>
   </div>
   <div class="chip-row" aria-label="Snel zoeken studies">
@@ -1078,6 +1087,22 @@ function escAttr(s) {
     .replace(/</g, "&lt;");
 }
 
+/** Korte NL-regel voor patiënten/lezers (uit data). */
+function readerNotePara(note) {
+  const n = String(note ?? "").trim();
+  if (!n) return "";
+  return (
+    '<p class="card-reader-note"><span class="card-reader-note-label">Voor lezers:</span> ' +
+    escHtml(n) +
+    "</p>"
+  );
+}
+
+function themeBadgesOnly(labels) {
+  const chips = (labels || []).map(l => `<span class="theme-chip">${escHtml(l)}</span>`).join("");
+  return chips ? `<div class="card-badges">${chips}</div>` : "";
+}
+
 /** Publicatie-aanbeveling: { title, url } of legacy string. */
 function insightRecLi(item) {
   const title = typeof item === "string" ? item : (item && item.title) || "";
@@ -1117,8 +1142,8 @@ function renderInsights() {
     parts.push(
       `<div class="insight-block">` +
         `<div class="highlight-list">` +
-        `<span class="highlight-list__title">Waar kun je starten met lezen?</span>` +
-        `<p class="highlight-list__lead">Vijf publicaties die in dit overzicht vaak aansluiten op LMNA en het hart — automatisch gekozen op titel en samenvatting.</p>` +
+        `<span class="highlight-list__title">Vijf suggesties om mee te beginnen</span>` +
+        `<p class="highlight-list__lead">Dit zijn vijf publicaties uit dit overzicht die vaak aansluiten op LMNA en het hart. Titels zijn meestal Engelstalig en formeel — dat hoort zo. Ze zijn automatisch gekozen op woorden in titel en tekst; open de link als je verder wilt lezen.</p>` +
         `<ol>` +
         hl.map(insightRecLi).join("") +
         `</ol></div></div>`
@@ -1138,7 +1163,7 @@ function renderInsights() {
         : "";
       parts.push(
         `<div class="theme-cluster"><h3>${escHtml(row.label)}</h3>${blurb}` +
-        `<div class="count">${row.count} publicatie(s) in dit scherm</div><ul>${ex}</ul></div>`
+        `<div class="count">${row.count} publicatie(s) in dit overzicht</div><ul>${ex}</ul></div>`
       );
     }
     parts.push(`</div>`);
@@ -1243,9 +1268,8 @@ function renderPubs() {
     return;
   }
   el.innerHTML = sorted.map(p => {
-    const chips = (p.theme_labels || []).map(l => `<span class="theme-chip">${escHtml(l)}</span>`).join("");
-    const rel = typeof p.relevance === "number" ? p.relevance : 0;
-    const badges = `<div class="card-badges"><span class="rel-chip" title="Relevantiescore (automatisch)" aria-label="Relevantie ${rel}">${rel}</span>${chips}</div>`;
+    const badges = themeBadgesOnly(p.theme_labels);
+    const note = readerNotePara(p.reader_note_nl);
     return `
     <div class="card">
       ${badges}
@@ -1253,12 +1277,13 @@ function renderPubs() {
         <div class="card-title"><a href="${p.url}" target="_blank" rel="noopener">${p.title || "—"}</a></div>
         <div class="card-date">${p.pub_date || ""}</div>
       </div>
+      ${note}
       <div class="card-meta">
         <strong>${p.journal || "—"}</strong>${p.authors ? " · " + p.authors : ""}
       </div>
       ${p.abstract ? `
         <div class="abstract" id="abs-${p.id}">${p.abstract}</div>
-        <span class="toggle-abstract" onclick="toggleAbs('${p.id}', this)">▸ abstract</span>
+        <span class="toggle-abstract" onclick="toggleAbs('${p.id}', this)">▸ samenvatting studie (Engels)</span>
       ` : ""}
     </div>
   `;
@@ -1268,7 +1293,7 @@ function renderPubs() {
 function toggleAbs(id, el) {
   const abs = document.getElementById("abs-" + id);
   abs.classList.toggle("open");
-  el.textContent = abs.classList.contains("open") ? "▾ verberg" : "▸ abstract";
+  el.textContent = abs.classList.contains("open") ? "▾ verberg samenvatting" : "▸ samenvatting studie (Engels)";
 }
 
 // ── Trials ────────────────────────────────────────────────────────────────
@@ -1358,9 +1383,8 @@ function renderTrials() {
     return;
   }
   el.innerHTML = sorted.map(t => {
-    const tChips = (t.theme_labels || []).map(l => `<span class="theme-chip">${escHtml(l)}</span>`).join("");
-    const tRel = typeof t.relevance === "number" ? t.relevance : 0;
-    const tBadges = `<div class="card-badges"><span class="rel-chip" title="Relevantiescore (automatisch)" aria-label="Relevantie ${tRel}">${tRel}</span>${tChips}</div>`;
+    const tBadges = themeBadgesOnly(t.theme_labels);
+    const tNote = readerNotePara(t.reader_note_nl);
     return `
     <div class="trial-card">
       ${tBadges}
@@ -1368,6 +1392,7 @@ function renderTrials() {
         <div class="trial-title"><a href="${t.url}" target="_blank" rel="noopener">${t.title || "—"}</a></div>
         <span class="badge ${badgeClass(t.status)}">${(t.status || "—").replace(/_/g," ")}</span>
       </div>
+      ${tNote}
       <div class="trial-meta">
         <span><strong>${t.nct_id}</strong></span>
         ${t.phase ? `<span>Fase: <strong>${t.phase}</strong></span>` : ""}
@@ -1434,9 +1459,8 @@ function renderNews() {
     return;
   }
   el.innerHTML = sorted.map(n => {
-    const nChips = (n.theme_labels || []).map(l => `<span class="theme-chip">${escHtml(l)}</span>`).join("");
-    const nRel = typeof n.relevance === "number" ? n.relevance : 0;
-    const nBadges = `<div class="card-badges"><span class="rel-chip" title="Relevantiescore (automatisch)" aria-label="Relevantie ${nRel}">${nRel}</span>${nChips}</div>`;
+    const nBadges = themeBadgesOnly(n.theme_labels);
+    const nNote = readerNotePara(n.reader_note_nl);
     return `
     <div class="card">
       ${nBadges}
@@ -1444,8 +1468,9 @@ function renderNews() {
         <div class="card-title"><a href="${n.url}" target="_blank" rel="noopener">${n.title || "—"}</a></div>
         <div class="card-date">${(n.pub_date || "").substring(0, 16)}</div>
       </div>
+      ${nNote}
       <div class="card-meta"><strong>${n.source || "—"}</strong></div>
-      ${n.summary ? `<details class="news-sum-wrap"><summary>Samenvatting</summary><div class="news-summary">${escHtml(n.summary)}</div></details>` : ""}
+      ${n.summary ? `<details class="news-sum-wrap"><summary>Korte tekst bij het bericht</summary><div class="news-summary">${escHtml(n.summary)}</div></details>` : ""}
     </div>
   `;
   }).join("");
