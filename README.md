@@ -1,6 +1,6 @@
 # LMNA Cardiac Disease Monitor
 
-Scrapet automatisch PubMed, ClinicalTrials.gov en nieuws. Publiceert wekelijks een dashboard op GitHub Pages.
+Scrapet automatisch PubMed, ClinicalTrials.gov en nieuws. Publiceert dagelijks een dashboard op GitHub Pages.
 
 **Live URL (na setup):**
 `https://nielsluigjes.github.io/LMNA-monitor/dashboard.html`
@@ -38,7 +38,7 @@ git push
 ### 4. Eerste run handmatig starten
 
 1. Tabblad **Actions** in je repo
-2. Klik **Weekly LMNA Scrape & Deploy**
+2. Klik **Daily LMNA Scrape & Deploy**
 3. **Run workflow** → **Run workflow**
 4. Wacht ~2 minuten
 
@@ -46,12 +46,12 @@ git push
 
 `https://nielsluigjes.github.io/LMNA-monitor/dashboard.html`
 
-Stuur deze link naar je vriend. Elke maandag 07:00 UTC automatisch bijgewerkt.
+Stuur deze link naar je vriend. Elke dag 07:00 UTC automatisch bijgewerkt.
 
 ---
 
 ## Kosten: €0
 
-- GitHub Actions: gratis (jij gebruikt ~5 min/week van 2000 gratis)
+- GitHub Actions: gratis (ongeveer enkele minuten per dag; ruim binnen de gratis minuten)
 - GitHub Pages: gratis
 - Alle APIs (PubMed, ClinicalTrials, RSS): gratis, geen keys nodig

@@ -45,6 +45,15 @@ _SCORE_TERMS: list[tuple[str, int]] = [
     ("cmr", 4),
 ]
 
+# Korte toelichting bij thema-cluster voor patiënten (zelfde id als _THEMES)
+_THEME_PATIENT_BLURB: dict[str, str] = {
+    "dcm": "Vaak over een zwakker wordend hart of hartfalen.",
+    "conduction": "Vaak over geleiding of ritme in het hart.",
+    "lmna": "Expliciet over LMNA of lamin.",
+    "therapy": "Over behandeling, medicijnen of therapie-onderzoek.",
+    "imaging": "Over echo, hart-MRI of andere beeldvorming.",
+}
+
 # thema-id, weergavenaam NL, zoekfragmenten (kleine letters)
 _THEMES: list[tuple[str, str, tuple[str, ...]]] = [
     ("dcm", "DCM / cardiomyopathie", ("dilated", "cardiomyopathy", "heart failure", "lvef", "systolic", " hf", "dcm")),
@@ -135,6 +144,13 @@ def _short_title(s: str | None, max_len: int = 72) -> str:
     return s[: max_len - 1].rstrip() + "…"
 
 
+def _pub_link_item(p: dict[str, Any], *, title_max: int = 72) -> dict[str, str]:
+    return {
+        "title": _short_title(p.get("title"), title_max),
+        "url": (p.get("url") or "").strip(),
+    }
+
+
 def build_digest(
     pubs: list[dict[str, Any]],
     trials: list[dict[str, Any]],
@@ -150,55 +166,68 @@ def build_digest(
                 by_theme[tid].append(p)
 
     theme_rows = []
-    id_to_label = {tid: lab for tid, lab, _ in _THEMES}
     for tid, lab, _ in _THEMES:
         items = by_theme[tid]
         if not items:
             continue
         top = sorted(items, key=lambda x: (-(x.get("relevance") or 0), x.get("pub_date") or ""))[:3]
-        titles = [_short_title(x.get("title")) for x in top]
+        examples = [_pub_link_item(x) for x in top]
         theme_rows.append(
             {
                 "id": tid,
                 "label": lab,
+                "blurb": _THEME_PATIENT_BLURB.get(tid, ""),
                 "count": sum(1 for p in pubs if tid in (p.get("theme_ids") or [])),
-                "examples": titles,
+                "examples": examples,
             }
         )
 
-    paragraphs = []
-    paragraphs.append(
-        f"In dit scherm staan {len(news)} recente nieuwsberichten, {len(pubs)} publicaties en "
-        f"{len(trials)} klinische studies (zoals nu in de database zitten). "
-        f"Hieronder een automatische indeling op onderwerp — ter oriëntatie, geen medisch oordeel."
+    overview_line = (
+        f"In de tabs staan {len(news)} nieuwsberichten, {len(pubs)} publicaties en "
+        f"{len(trials)} studies (uit de database). Je hoeft niet alles te lezen: "
+        f"gebruik zoeken en de snelknoppen om te vernauwen."
     )
+    recruiting_note: str | None = None
     if recruiting:
-        paragraphs.append(
-            f"Er zijn nu {len(recruiting)} studie(s) met status gericht op werving (zoals RECRUITING). "
-            f"Bekijk details op ClinicalTrials.gov en bespreek met je zorgteam of dit iets voor jullie is."
-        )
-    if theme_rows:
-        paragraphs.append(
-            "Thema’s bij de publicaties in dit overzicht (op basis van trefwoorden in titel en abstract):"
-        )
-    else:
-        paragraphs.append(
-            "Er zijn geen duidelijke thema-treffers in de publicaties van dit overzicht; "
-            "gebruik de zoekbalk om gericht te filteren."
+        n = len(recruiting)
+        if n == 1:
+            recruiting_note = (
+                "Er is nu één studie in dit overzicht die deelnemers zoekt (status rond ‘werving’). "
+                "Inschrijven kan alleen via de officiële studiepagina (ClinicalTrials.gov) en na overleg met je arts — "
+                "dit is geen aanbeveling om mee te doen."
+            )
+        else:
+            recruiting_note = (
+                f"Er zijn nu {n} studies in dit overzicht die deelnemers zoeken (status rond ‘werving’). "
+                "Inschrijven kan alleen via de officiële studiepagina (ClinicalTrials.gov) en na overleg met je arts — "
+                "dit is geen aanbeveling om mee te doen."
+            )
+    themes_intro = (
+        "Onderwerpen waarin de publicaties in dit scherm vaak passen. "
+        "De indeling is automatisch (op woorden in titel en samenvatting)."
+    )
+    empty_themes_note: str | None = None
+    if not theme_rows:
+        empty_themes_note = (
+            "In de publicaties van dit scherm vallen geen duidelijke onderwerpgroepen te maken; "
+            "gebruik de zoekbalk om gericht te zoeken."
         )
 
     top_pubs = sorted(pubs, key=lambda x: (-(x.get("relevance") or 0), x.get("pub_date") or ""))[:5]
-    highlight_titles = [_short_title(p.get("title"), 80) for p in top_pubs if p.get("title")]
+    highlights = [_pub_link_item(p, title_max=80) for p in top_pubs if p.get("title")]
 
     return {
-        "paragraphs": paragraphs,
-        "theme_rows": theme_rows,
-        "highlights": highlight_titles,
-        "recruiting_count": len(recruiting),
         "method_note": (
-            "Relevantiescore en thema’s zijn heuristisch (trefwoorden). "
-            "Controleer altijd de originele bron."
+            "Geen medisch advies. Onderstaande tips zijn automatisch gemaakt op basis van woorden in titels en teksten — "
+            "open altijd de originele bron."
         ),
+        "overview_line": overview_line,
+        "recruiting_note": recruiting_note,
+        "themes_intro": themes_intro,
+        "empty_themes_note": empty_themes_note,
+        "theme_rows": theme_rows,
+        "highlights": highlights,
+        "recruiting_count": len(recruiting),
     }
 
 
