@@ -1,6 +1,8 @@
 name: Weekly LMNA Scrape & Deploy
 
 on:
+  push:
+    branches: [main]
   schedule:
     - cron: '0 7 * * 1'   # Elke maandag 07:00 UTC
   workflow_dispatch:        # Handmatig starten via GitHub UI
@@ -37,7 +39,7 @@ jobs:
           git config user.name "LMNA Bot"
           git config user.email "bot@lmna-monitor"
           git add lmna.db dashboard.html
-          git diff --cached --quiet || git commit -m "Weekly update $(date +'%Y-%m-%d')"
+          git diff --cached --quiet || git commit -m "Weekly update $(date +'%Y-%m-%d') [skip ci]"
           git push
 
       - name: Deploy to GitHub Pages
