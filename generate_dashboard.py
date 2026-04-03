@@ -63,7 +63,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>(function(){var k="lmna-theme",r=document.documentElement,s=localStorage.getItem(k),l=window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches;if(s==="light"||(s!=="dark"&&l))r.setAttribute("data-theme","light");})();</script>
-<title>LMNA: overzicht</title>
+<title>LMNA-Monitor: overzicht</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
@@ -242,8 +242,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .intro {
     padding: 28px 48px 32px;
     border-bottom: 1px solid var(--border);
-    background: var(--intro-grad);
-    backdrop-filter: blur(8px);
+    background: var(--insights-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    max-width: 100%;
   }
   .intro h2 {
     font-family: 'Fraunces', serif;
@@ -257,22 +259,29 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin-bottom: 12px;
     font-size: 14px;
   }
-  .intro p.intro-disclaimer {
-    display: block;
-    width: fit-content;
-    max-width: 100%;
+  .intro-disclaimer-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 48px;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    background: color-mix(in srgb, var(--accent) 75%, var(--bg));
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .intro-disclaimer-section .intro-disclaimer {
+    flex: 0 1 auto;
+    width: 100%;
     font-size: 13px;
     font-weight: 700;
     line-height: 1.45;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 15%, var(--bg));
-    border: 1px solid var(--accent);
-    border-radius: 0;
-    padding: 12px 16px;
-    margin: 14px 0 0;
-    margin-bottom: 0;
+    color: #fff;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
   }
   .intro-lead {
     margin-bottom: 0;
@@ -312,6 +321,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   .intro-details[open] > summary::before {
     transform: rotate(90deg);
+  }
+  .intro-details[open] > summary {
+    margin-bottom: 14px;
   }
   .intro-details-body {
     padding: 4px 0 2px;
@@ -960,12 +972,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     .intro-details-body {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      align-items: start;
+      align-items: stretch;
     }
   }
   @media (max-width: 768px) {
     header {
       padding: 24px 20px;
+    }
+    .intro-disclaimer-section {
+      padding: 10px 20px;
     }
     .intro { padding: 22px 20px; }
     .insights {
@@ -987,7 +1002,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <header>
   <div class="logo-block">
     <div class="logo-heading">
-      <h1>LMNA</h1>
+      <h1>LMNA-Monitor</h1>
       <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Schakel naar licht thema">
         <span class="theme-toggle__icon theme-toggle__sun" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></span>
         <span class="theme-toggle__icon theme-toggle__moon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
@@ -1000,10 +1015,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   </div>
 </header>
 
+<section class="intro-disclaimer-section" aria-label="Medische disclaimer">
+  <p class="intro-disclaimer">Niet bedoeld voor zelfdiagnose; overleg altijd met je cardioloog of geneticus.</p>
+</section>
+
 <section class="intro" aria-labelledby="intro-heading">
   <h2 id="intro-heading">Voor wie</h2>
   <p class="intro-lead">Voor patiënten en gezinnen die LMNA-bronnen op één plek willen. Deze pagina toont het resultaat van een dagelijks geautomatiseerde zoekactie naar LMNA-bronnen: nieuws, publicaties en studies. Binnen deze resultaten kan verder gezocht worden naar wat voor jou relevant is.</p>
-  <p class="intro-disclaimer">Niet bedoeld voor zelfdiagnose; overleg altijd met je cardioloog of geneticus.</p>
   <details class="intro-details">
     <summary>Uitleg: LMNA en het hart, en hoe je hier zoekt</summary>
     <div class="intro-details-body">
