@@ -6,16 +6,30 @@ Run manually or via cron: 0 7 * * * python3 scraper.py  (dagelijks 07:00, lokaal
 """
 
 import sqlite3
+import re
 import requests
 import hashlib
 import json
 import time
+from html import unescape
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from pathlib import Path
 import feedparser  # pip install feedparser
 
 DB_PATH = Path(__file__).parent / "lmna.db"
+
+
+def rss_html_to_plain(raw: str, max_len: int = 1000) -> str:
+    """Strip HTML from RSS descriptions; truncate plain text (not mid-tag)."""
+    if not raw:
+        return ""
+    t = re.sub(r"(?is)<script[^>]*>.*?</script>", " ", raw)
+    t = re.sub(r"<[^>]+>", " ", t)
+    t = unescape(t)
+    t = " ".join(t.split()).strip()
+    return t[:max_len]
+
 
 # ── Search terms ────────────────────────────────────────────────────────────
 PUBMED_QUERY = (
@@ -250,7 +264,8 @@ def fetch_news(con):
             for entry in feed.entries[:20]:
                 title   = entry.get("title", "")
                 url     = entry.get("link", "")
-                summary = entry.get("summary", "")[:1000]
+                raw_sum = entry.get("summary") or entry.get("description") or ""
+                summary = rss_html_to_plain(raw_sum, 1000)
                 source  = feed.feed.get("title", feed_url)
                 pub_date = entry.get("published", "")
                 uid = hashlib.md5(url.encode()).hexdigest()
