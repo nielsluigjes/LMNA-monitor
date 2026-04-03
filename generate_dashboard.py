@@ -149,11 +149,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   header {
     padding: 40px 48px 28px;
     border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 24px;
-    flex-wrap: wrap;
   }
   .logo-heading {
     display: flex;
@@ -189,21 +184,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   .last-updated {
     color: var(--muted);
-    font-size: 12px;
+    font-size: 11px;
     text-align: right;
     font-family: 'DM Mono', monospace;
+    margin-top: 14px;
+    width: 100%;
   }
   .last-updated span {
     display: block;
     color: var(--accent);
-    font-size: 13px;
+    font-size: 12px;
     margin-top: 2px;
-  }
-  .header-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 12px;
   }
   .theme-toggle {
     display: inline-flex;
@@ -258,7 +249,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   .intro p {
     color: var(--prose);
-    max-width: 52rem;
     margin-bottom: 12px;
     font-size: 14px;
   }
@@ -268,18 +258,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     border-left: 3px solid var(--accent3);
     padding-left: 14px;
     margin: 14px 0 0;
-    max-width: 52rem;
   }
   .intro-lead {
     margin-bottom: 0;
     color: var(--prose);
     font-size: 14px;
     line-height: 1.5;
-    max-width: 52rem;
   }
   .intro-details {
     margin-top: 16px;
-    max-width: 52rem;
     border: 0;
   }
   .intro-details > summary {
@@ -936,28 +923,22 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
 
   @media (min-width: 769px) {
-    .logo-block {
-      flex: 1;
-      min-width: 0;
-    }
     .logo-heading {
+      width: 100%;
       justify-content: flex-start;
     }
     .logo-heading .theme-toggle {
       margin-left: auto;
     }
+    .intro-details-body {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      align-items: start;
+    }
   }
   @media (max-width: 768px) {
     header {
       padding: 24px 20px;
-      flex-direction: column;
-      align-items: stretch;
-    }
-    .logo-block { flex: none; }
-    .header-meta {
-      flex-direction: row;
-      justify-content: flex-end;
-      align-items: center;
     }
     .intro { padding: 22px 20px; }
     .insights {
@@ -986,8 +967,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       </button>
     </div>
     <p>Onderzoek, studies en nieuws — ter informatie. Geen medisch advies.</p>
-  </div>
-  <div class="header-meta">
     <div class="last-updated">
       Laatst bijgewerkt<span id="ts">—</span>
     </div>
