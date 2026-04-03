@@ -1,34 +1,22 @@
 #!/usr/bin/env python3
 """
 LMNA Cardiac Disease Monitor: Scraper
-Fetches: PubMed, ClinicalTrials.gov (wereldwijd + NL/DE/BE-locaties), RSS feeds
+Fetches: PubMed, ClinicalTrials.gov (wereldwijd + NL/DE/BE-locaties), RSS feeds.
+Slaat geen PubMed-abstracts of RSS-samenvattingen op (alleen metadata + links).
 Run manually or via cron: 0 7 * * * python3 scraper.py  (dagelijks 07:00, lokaal)
 """
 
 import sqlite3
-import re
 import requests
 import hashlib
 import json
 import time
-from html import unescape
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from pathlib import Path
 import feedparser  # pip install feedparser
 
 DB_PATH = Path(__file__).parent / "lmna.db"
-
-
-def rss_html_to_plain(raw: str, max_len: int = 1000) -> str:
-    """Strip HTML from RSS descriptions; truncate plain text (not mid-tag)."""
-    if not raw:
-        return ""
-    t = re.sub(r"(?is)<script[^>]*>.*?</script>", " ", raw)
-    t = re.sub(r"<[^>]+>", " ", t)
-    t = unescape(t)
-    t = " ".join(t.split()).strip()
-    return t[:max_len]
 
 
 # ── Search terms ────────────────────────────────────────────────────────────
@@ -130,7 +118,6 @@ def fetch_pubmed(con, max_results=50):
     for article in root.findall(".//PubmedArticle"):
         pmid = article.findtext(".//PMID", "")
         title = article.findtext(".//ArticleTitle", "")
-        abstract = " ".join(t.text or "" for t in article.findall(".//AbstractText"))
         journal = article.findtext(".//Journal/Title", "")
         
         # Authors
@@ -154,7 +141,7 @@ def fetch_pubmed(con, max_results=50):
                 INSERT OR IGNORE INTO publications
                 (id, title, authors, journal, pub_date, abstract, url, fetched_at)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """, (pmid, title, authors_str, journal, pub_date, abstract[:2000], url,
+            """, (pmid, title, authors_str, journal, pub_date, "", url,
                   datetime.now().isoformat()))
             if cur.rowcount:
                 new += 1
@@ -264,8 +251,6 @@ def fetch_news(con):
             for entry in feed.entries[:20]:
                 title   = entry.get("title", "")
                 url     = entry.get("link", "")
-                raw_sum = entry.get("summary") or entry.get("description") or ""
-                summary = rss_html_to_plain(raw_sum, 1000)
                 source  = feed.feed.get("title", feed_url)
                 pub_date = entry.get("published", "")
                 uid = hashlib.md5(url.encode()).hexdigest()
@@ -274,7 +259,7 @@ def fetch_news(con):
                     INSERT OR IGNORE INTO news
                     (id, title, source, pub_date, url, summary, fetched_at)
                     VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (uid, title, source, pub_date, url, summary,
+                """, (uid, title, source, pub_date, url, "",
                       datetime.now().isoformat()))
                 if cur.rowcount:
                     new += 1
