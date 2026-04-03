@@ -168,7 +168,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     text-shadow: none;
   }
   .logo-block p {
-    color: var(--muted);
+    color: var(--accent);
     margin-top: 10px;
     font-size: 14px;
     font-family: 'Plus Jakarta Sans', sans-serif;
@@ -279,7 +279,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     font-size: 14px;
     font-weight: 600;
     list-style: none;
-    padding: 12px 16px;
+    padding: 12px 18px 12px 16px;
     margin: 0 -16px;
     border-radius: var(--radius-md);
     user-select: none;
@@ -290,10 +290,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   .intro-details > summary::-webkit-details-marker { display: none; }
   .intro-details > summary::before {
-    content: "▸ ";
+    content: "▸";
     display: inline-block;
+    font-size: 1.85em;
+    line-height: 0;
+    vertical-align: -0.14em;
+    margin-right: 0.32em;
     transition: transform 0.15s;
-    color: var(--muted);
+    color: var(--accent2);
   }
   .intro-details[open] > summary::before {
     transform: rotate(90deg);
@@ -423,10 +427,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   /* NAV TABS */
   .tabs {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
-    padding: 14px 48px 18px;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0;
+    padding: 0 48px;
+    min-height: 56px;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -436,26 +441,34 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     border-bottom: 1px solid var(--border);
   }
   .tab {
-    padding: 11px 22px;
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
     cursor: pointer;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.02em;
     text-transform: none;
-    border-radius: var(--radius-pill);
+    border-radius: 0;
     transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     background: transparent;
     border: none;
+    border-right: 1px solid var(--border);
     font-family: 'Plus Jakarta Sans', sans-serif;
   }
-  .tab:hover { color: var(--text); background: color-mix(in srgb, var(--surface2) 65%, transparent); }
+  .tab:last-child { border-right: none; }
+  .tab:hover { color: var(--text); background: color-mix(in srgb, var(--surface2) 55%, transparent); }
   .tab.active {
     color: var(--accent);
-    background: color-mix(in srgb, var(--surface) 92%, transparent);
-    box-shadow: var(--shadow-sm);
-    border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--border));
+    background: color-mix(in srgb, var(--surface) 90%, transparent);
+    box-shadow: inset 0 -3px 0 0 var(--accent);
+    border-right: 1px solid var(--border);
   }
+  .tab.active:last-child { border-right: none; }
 
   /* MAIN CONTENT */
   main { padding: 32px 48px 48px; }
@@ -925,7 +938,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       padding: 16px 20px 22px;
     }
     .stat { padding: 18px 16px; }
-    .tabs { padding: 12px 20px 14px; overflow-x: auto; flex-wrap: nowrap; }
+    .tabs { padding: 0 20px; min-height: 52px; overflow-x: auto; flex-wrap: nowrap; }
     main { padding: 22px 20px 36px; }
   }
 </style>
@@ -950,7 +963,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 <section class="intro" aria-labelledby="intro-heading">
   <h2 id="intro-heading">Voor wie</h2>
-  <p class="intro-lead">Voor patiënten en gezinnen die LMNA-bronnen op één plek willen. Zoek en filter om te vernauwen.</p>
+  <p class="intro-lead">Voor patiënten en gezinnen die LMNA-bronnen op één plek willen. Deze pagina toont het resultaat van een dagelijks geautomatiseerde zoekactie naar LMNA-bronnen: nieuws, publicaties en studies. Binnen deze resultaten kan verder gezocht worden naar wat voor jou relevant is.</p>
   <p class="intro-disclaimer">Niet voor zelfdiagnose — overleg met je cardioloog of geneticus.</p>
   <details class="intro-details">
     <summary>Uitleg: LMNA en het hart, en hoe je hier zoekt</summary>
@@ -990,14 +1003,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             </dd>
           </div>
         </dl>
-      </section>
-      <section class="intro-detail-section" aria-labelledby="intro-read-title">
-        <h3 id="intro-read-title" class="intro-detail-title">Hoe lees je dit scherm?</h3>
-        <ul class="intro-detail-list">
-          <li>Veel titels en teksten zijn <strong>Engels</strong> — dat hoort zo bij wetenschap en nieuws. Moeilijke woorden zijn normaal; je hoeft niet alles te begrijpen.</li>
-          <li>Begin desgewenst bij <strong>Nieuws</strong> of bij <strong>Studies</strong> waar “werving” open staat; publicaties zijn vaak het zwaarst.</li>
-          <li>Open een <strong>abstract</strong> (samenvatting) alleen als je dieper wilt lezen — en bespreek altijd met je arts wat voor jou klopt.</li>
-        </ul>
       </section>
     </div>
   </details>
@@ -1045,8 +1050,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <button type="button" class="filter-btn active" onclick="setNewsSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
     <button type="button" class="filter-btn" onclick="setNewsSort('date', this)">Recent</button>
   </div>
-  <div class="chip-row" aria-label="Snel zoeken nieuws">
-    <span class="chip-label">Snel</span>
+  <div class="chip-row" aria-label="Snelfilter nieuws">
+    <span class="chip-label">Snelfilter</span>
     <button type="button" class="chip" onclick="quickNews('lamin')">LMNA / lamin</button>
     <button type="button" class="chip" onclick="quickNews('cardiomyopathy')">cardiomyopathie</button>
     <button type="button" class="chip" onclick="quickNews('dilated')">DCM</button>
@@ -1054,7 +1059,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <button type="button" class="chip" onclick="quickNews('')">alles tonen</button>
   </div>
   <div class="search-bar">
-    <input type="text" id="search-news" placeholder="Zoek…" oninput="filterNews()" autocomplete="off">
+    <input type="text" id="search-news" placeholder="Zoekfilter…" oninput="filterNews()" autocomplete="off">
   </div>
   <div class="result-count" id="count-news"></div>
   <div class="card-grid" id="news-list"></div>
@@ -1067,8 +1072,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <button type="button" class="filter-btn active" onclick="setPubSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
     <button type="button" class="filter-btn" onclick="setPubSort('date', this)">Recent</button>
   </div>
-  <div class="chip-row" aria-label="Snel zoeken publicaties">
-    <span class="chip-label">Snel</span>
+  <div class="chip-row" aria-label="Snelfilter publicaties">
+    <span class="chip-label">Snelfilter</span>
     <button type="button" class="chip" onclick="quickPub('dilated cardiomyopathy')">DCM</button>
     <button type="button" class="chip" onclick="quickPub('LMNA')">LMNA</button>
     <button type="button" class="chip" onclick="quickPub('heart failure')">hartfalen</button>
@@ -1092,8 +1097,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <button type="button" class="filter-btn active" onclick="setTrialSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
     <button type="button" class="filter-btn" onclick="setTrialSort('date', this)">Startdatum</button>
   </div>
-  <div class="chip-row" aria-label="Snel zoeken studies">
-    <span class="chip-label">Snel</span>
+  <div class="chip-row" aria-label="Snelfilter studies">
+    <span class="chip-label">Snelfilter</span>
     <button type="button" class="chip" onclick="quickTrial('LMNA')">LMNA</button>
     <button type="button" class="chip" onclick="quickTrial('cardiomyopathy')">cardiomyopathie</button>
     <button type="button" class="chip" onclick="quickTrial('dilated')">DCM</button>
