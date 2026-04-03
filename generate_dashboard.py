@@ -11,6 +11,7 @@ from datetime import datetime
 from pathlib import Path
 
 from insight_engine import enrich_all
+from scraper import rss_html_to_plain
 
 DB_PATH   = Path(__file__).parent / "lmna.db"
 OUT_PATH  = Path(__file__).parent / "dashboard.html"
@@ -33,9 +34,13 @@ def load_data():
             END, start_date DESC
     """).fetchall()
 
-    news = con.execute("""
+    news_rows = con.execute("""
         SELECT * FROM news ORDER BY fetched_at DESC LIMIT 100
     """).fetchall()
+    news = [
+        {**dict(row), "summary": rss_html_to_plain(row["summary"] or "")}
+        for row in news_rows
+    ]
 
     stats = {
         "total_pubs": con.execute("SELECT COUNT(*) FROM publications").fetchone()[0],
@@ -48,7 +53,7 @@ def load_data():
     return (
         [dict(r) for r in pubs],
         [dict(r) for r in trials],
-        [dict(r) for r in news],
+        news,
         stats
     )
 
