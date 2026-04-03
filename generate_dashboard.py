@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-LMNA Monitor — Dashboard Generator
+LMNA Monitor: Dashboard Generator
 Reads lmna.db and produces a self-contained dashboard.html
 Run after scraper.py: python3 generate_dashboard.py
 """
@@ -63,7 +63,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>(function(){var k="lmna-theme",r=document.documentElement,s=localStorage.getItem(k),l=window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches;if(s==="light"||(s!=="dark"&&l))r.setAttribute("data-theme","light");})();</script>
-<title>LMNA — overzicht</title>
+<title>LMNA: overzicht</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
@@ -257,12 +257,22 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin-bottom: 12px;
     font-size: 14px;
   }
-  .intro-disclaimer {
+  .intro p.intro-disclaimer {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
     font-size: 13px;
-    color: var(--muted);
-    border-left: 3px solid var(--accent3);
-    padding-left: 14px;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 15%, var(--bg));
+    border: 1px solid var(--accent);
+    border-radius: 0;
+    padding: 12px 16px;
     margin: 14px 0 0;
+    margin-bottom: 0;
   }
   .intro-lead {
     margin-bottom: 0;
@@ -711,7 +721,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin-top: 8px;
   }
 
-  /* INSIGHTS — lokale heuristiek, geen API */
+  /* INSIGHTS: lokale heuristiek, geen API */
   .insights {
     padding: 28px 48px 32px;
     border-bottom: 1px solid var(--border);
@@ -983,9 +993,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <span class="theme-toggle__icon theme-toggle__moon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
       </button>
     </div>
-    <p>Onderzoek, studies en nieuws — ter informatie. Geen medisch advies.</p>
+    <p>Onderzoek, studies en nieuws, ter informatie. Geen medisch advies.</p>
     <div class="last-updated">
-      Laatst bijgewerkt<span id="ts">—</span>
+      Laatst bijgewerkt<span id="ts">…</span>
     </div>
   </div>
 </header>
@@ -993,13 +1003,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <section class="intro" aria-labelledby="intro-heading">
   <h2 id="intro-heading">Voor wie</h2>
   <p class="intro-lead">Voor patiënten en gezinnen die LMNA-bronnen op één plek willen. Deze pagina toont het resultaat van een dagelijks geautomatiseerde zoekactie naar LMNA-bronnen: nieuws, publicaties en studies. Binnen deze resultaten kan verder gezocht worden naar wat voor jou relevant is.</p>
-  <p class="intro-disclaimer">Niet voor zelfdiagnose — overleg met je cardioloog of geneticus.</p>
+  <p class="intro-disclaimer">Niet bedoeld voor zelfdiagnose; overleg altijd met je cardioloog of geneticus.</p>
   <details class="intro-details">
     <summary>Uitleg: LMNA en het hart, en hoe je hier zoekt</summary>
     <div class="intro-details-body">
       <section class="intro-detail-section" aria-labelledby="intro-heart-title">
         <h3 id="intro-heart-title" class="intro-detail-title">LMNA en het hart</h3>
-        <p class="intro-detail-text">Een mutatie in LMNA kan het hart op verschillende manieren beïnvloeden. Daarom staan er veel verschillende studies en artikelen in dit overzicht — lang niet alles is voor jou relevant.</p>
+        <p class="intro-detail-text">Een mutatie in LMNA kan het hart op verschillende manieren beïnvloeden. Daarom staan er veel verschillende studies en artikelen in dit overzicht: lang niet alles is voor jou relevant.</p>
         <ul class="intro-detail-list">
           <li>Het hart kan minder stevig pompen. Dat noemen artsen vaak <strong>dilatatieve cardiomyopathie</strong>, kort <strong>DCM</strong>.</li>
           <li>Of er zijn klachten door een verstoorde <strong>geleiding</strong> van de elektrische prikkel in het hart, of door een <strong>ritmestoornis</strong>.</li>
@@ -1039,26 +1049,26 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 <div class="stats-bar">
   <div class="stat">
-    <div class="stat-num" id="stat-news">—</div>
+    <div class="stat-num" id="stat-news">…</div>
     <div class="stat-label">Nieuws</div>
   </div>
   <div class="stat">
-    <div class="stat-num" id="stat-pubs">—</div>
+    <div class="stat-num" id="stat-pubs">…</div>
     <div class="stat-label">Publicaties</div>
   </div>
   <div class="stat">
-    <div class="stat-num" id="stat-trials">—</div>
+    <div class="stat-num" id="stat-trials">…</div>
     <div class="stat-label">Studies</div>
   </div>
   <div class="stat">
-    <div class="stat-num green" id="stat-recruiting">—</div>
+    <div class="stat-num green" id="stat-recruiting">…</div>
     <div class="stat-label">Werving open</div>
   </div>
 </div>
 <div class="dashboard-split">
 <section class="insights" aria-labelledby="insights-heading">
   <h2 id="insights-heading">Waar begin je?</h2>
-  <p class="insights-sub">Korte oriëntatie in gewone taal — geen medisch advies. Links in de tabs vind je het nieuws, de publicaties en de studies.</p>
+  <p class="insights-sub">Korte oriëntatie in gewone taal; geen medisch advies. Links in de tabs vind je het nieuws, de publicaties en de studies.</p>
   <p class="insights-method" id="insights-method"></p>
   <div id="insights-body"></div>
 </section>
@@ -1120,7 +1130,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 <!-- TRIALS -->
 <div id="panel-trials" class="panel">
-  <p class="panel-hint">Een studie met status <strong>RECRUITING</strong> zoekt op dit moment deelnemers. Dat is géén aanbeveling om mee te doen — bespreek het met je arts en meld je alleen via de officiële studiepagina.</p>
+  <p class="panel-hint">Een studie met status <strong>RECRUITING</strong> zoekt op dit moment deelnemers. Dat is géén aanbeveling om mee te doen; bespreek het met je arts en meld je alleen via de officiële studiepagina.</p>
   <div class="sort-row" aria-label="Sorteer studies">
     <span class="chip-label">Sorteer</span>
     <button type="button" class="filter-btn active" onclick="setTrialSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
@@ -1259,7 +1269,7 @@ function renderInsights() {
       `<div class="insight-block">` +
         `<div class="highlight-list">` +
         `<span class="highlight-list__title">Vijf suggesties om mee te beginnen</span>` +
-        `<p class="highlight-list__lead">Dit zijn vijf publicaties uit dit overzicht die vaak aansluiten op LMNA en het hart. Titels zijn meestal Engelstalig en formeel — dat hoort zo. Ze zijn automatisch gekozen op woorden in titel en tekst; open de link als je verder wilt lezen.</p>` +
+        `<p class="highlight-list__lead">Dit zijn vijf publicaties uit dit overzicht die vaak aansluiten op LMNA en het hart. Titels zijn meestal Engelstalig en formeel; dat hoort zo. Ze zijn automatisch gekozen op woorden in titel en tekst; open de link als je verder wilt lezen.</p>` +
         `<ol>` +
         hl.map(insightRecLi).join("") +
         `</ol></div></div>`
@@ -1380,7 +1390,7 @@ function renderPubs() {
     `${sorted.length} / ${DATA.publications.length} publicaties`;
   const el = document.getElementById("pubs-list");
   if (!sorted.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🔬</div>Geen resultaten — pas zoek of filters aan.</div>';
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🔬</div>Geen resultaten; pas zoek of filters aan.</div>';
     return;
   }
   el.innerHTML = sorted.map(p => {
@@ -1390,12 +1400,12 @@ function renderPubs() {
     <div class="card">
       ${badges}
       <div class="card-header">
-        <div class="card-title"><a href="${p.url}" target="_blank" rel="noopener">${p.title || "—"}</a></div>
+        <div class="card-title"><a href="${p.url}" target="_blank" rel="noopener">${p.title || "-"}</a></div>
         <div class="card-date">${p.pub_date || ""}</div>
       </div>
       ${note}
       <div class="card-meta">
-        <strong>${p.journal || "—"}</strong>${p.authors ? " · " + p.authors : ""}
+        <strong>${p.journal || "-"}</strong>${p.authors ? " · " + p.authors : ""}
       </div>
       ${p.abstract ? `
         <div class="abstract" id="abs-${p.id}">${p.abstract}</div>
@@ -1495,7 +1505,7 @@ function renderTrials() {
     `${sorted.length} / ${DATA.trials.length} studies`;
   const el = document.getElementById("trials-list");
   if (!sorted.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🧪</div>Geen studies — pas filter of zoekterm.</div>';
+    el.innerHTML = '<div class="empty"><div class="empty-icon">🧪</div>Geen studies; pas filter of zoekterm.</div>';
     return;
   }
   el.innerHTML = sorted.map(t => {
@@ -1505,8 +1515,8 @@ function renderTrials() {
     <div class="trial-card">
       ${tBadges}
       <div class="trial-header">
-        <div class="trial-title"><a href="${t.url}" target="_blank" rel="noopener">${t.title || "—"}</a></div>
-        <span class="badge ${badgeClass(t.status)}">${(t.status || "—").replace(/_/g," ")}</span>
+        <div class="trial-title"><a href="${t.url}" target="_blank" rel="noopener">${t.title || "-"}</a></div>
+        <span class="badge ${badgeClass(t.status)}">${(t.status || "-").replace(/_/g," ")}</span>
       </div>
       ${tNote}
       <div class="trial-meta">
@@ -1571,7 +1581,7 @@ function renderNews() {
     `${sorted.length} / ${DATA.news.length} nieuws`;
   const el = document.getElementById("news-list");
   if (!sorted.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">📰</div>Geen nieuws — pas je zoekterm aan.</div>';
+    el.innerHTML = '<div class="empty"><div class="empty-icon">📰</div>Geen nieuws; pas je zoekterm aan.</div>';
     return;
   }
   el.innerHTML = sorted.map(n => {
@@ -1581,11 +1591,11 @@ function renderNews() {
     <div class="card">
       ${nBadges}
       <div class="card-header">
-        <div class="card-title"><a href="${n.url}" target="_blank" rel="noopener">${n.title || "—"}</a></div>
+        <div class="card-title"><a href="${n.url}" target="_blank" rel="noopener">${n.title || "-"}</a></div>
         <div class="card-date">${(n.pub_date || "").substring(0, 16)}</div>
       </div>
       ${nNote}
-      <div class="card-meta"><strong>${n.source || "—"}</strong></div>
+      <div class="card-meta"><strong>${n.source || "-"}</strong></div>
       ${n.summary ? `<details class="news-sum-wrap"><summary>Korte tekst bij het bericht</summary><div class="news-summary">${escHtml(n.summary)}</div></details>` : ""}
     </div>
   `;

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 Heuristische relevantie, thema-clustering (trefwoord-buckets) en korte NL-samenvattingen.
-Geen externe API — alleen locale tekstanalyse.
+Geen externe API; alleen locale tekstanalyse.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-# (substring, punten) — laag-drempel matches op gecombineerde kleine tekst
+# (substring, punten): laag-drempel matches op gecombineerde kleine tekst
 _SCORE_TERMS: list[tuple[str, int]] = [
     ("lmna", 22),
     ("lamin a", 18),
@@ -58,7 +58,7 @@ _THEME_PATIENT_BLURB: dict[str, str] = {
 _READER_NOTE_BY_THEME: dict[str, str] = {
     "dcm": "Dit lijkt vooral te gaan over een zwakker wordend hart of hartfalen.",
     "conduction": "Dit lijkt vooral te gaan over geleiding van de hartprikkel of over ritme.",
-    "lmna": "Dit gaat expliciet over LMNA of lamin — vaak dicht bij de oorzaak van de aandoening.",
+    "lmna": "Dit gaat expliciet over LMNA of lamin; vaak dicht bij de oorzaak van de aandoening.",
     "therapy": "Dit gaat waarschijnlijk over behandeling, medicijnen of nieuwe therapieën in onderzoek.",
     "imaging": "Dit gaat waarschijnlijk over echo, hart-MRI of vergelijkbare onderzoeken.",
 }
@@ -69,7 +69,7 @@ _READER_NOTE_FALLBACK = (
 )
 
 _RECRUITING_TRIAL_NOTE = (
-    "Deze studie staat open voor werving — meedoen kan alleen via de officiële studiepagina "
+    "Deze studie staat open voor werving; meedoen kan alleen via de officiële studiepagina "
     "en na overleg met je arts."
 )
 
@@ -212,8 +212,8 @@ def build_digest(
         )
 
     overview_line = (
-        f"Hier staan {len(news)} nieuwsberichten, {len(pubs)} publicaties en {len(trials)} studies "
-        f"— verzameld uit openbare bronnen. Je hoeft echt niet alles te lezen: "
+        f"Hier staan {len(news)} nieuwsberichten, {len(pubs)} publicaties en {len(trials)} studies, "
+        f"verzameld uit openbare bronnen. Je hoeft echt niet alles te lezen: "
         f"begin gerust bij Nieuws of bij de kantlijn ‘Waar begin je?’, en gebruik zoeken en snelknoppen "
         f"om te vernauwen naar wat bij jou past."
     )
@@ -223,18 +223,18 @@ def build_digest(
         if n == 1:
             recruiting_note = (
                 "Er is nu één studie in dit overzicht die deelnemers zoekt (status rond ‘werving’). "
-                "Inschrijven kan alleen via de officiële studiepagina (ClinicalTrials.gov) en na overleg met je arts — "
-                "dit is geen aanbeveling om mee te doen."
+                "Inschrijven kan alleen via de officiële studiepagina (ClinicalTrials.gov) en na overleg met je arts. "
+                "Dit is geen aanbeveling om mee te doen."
             )
         else:
             recruiting_note = (
                 f"Er zijn nu {n} studies in dit overzicht die deelnemers zoeken (status rond ‘werving’). "
-                "Inschrijven kan alleen via de officiële studiepagina (ClinicalTrials.gov) en na overleg met je arts — "
-                "dit is geen aanbeveling om mee te doen."
+                "Inschrijven kan alleen via de officiële studiepagina (ClinicalTrials.gov) en na overleg met je arts. "
+                "Dit is geen aanbeveling om mee te doen."
             )
     themes_intro = (
         "Hieronder staan een paar veelvoorkomende onderwerpen onder de publicaties. "
-        "De groepering is automatisch (op woorden in titel en tekst) — geen medische indeling, "
+        "De groepering is automatisch (op woorden in titel en tekst); geen medische indeling, "
         "maar wel handig om te oriënteren."
     )
     empty_themes_note: str | None = None
