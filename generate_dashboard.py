@@ -813,6 +813,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     font-size: 13px;
     line-height: 1.6;
   }
+  .theme-cluster ul li {
+    margin-bottom: 0.6rem;
+  }
+  .theme-cluster ul li:last-child {
+    margin-bottom: 0;
+  }
   .highlight-list {
     max-width: 48rem;
     margin: 0;
@@ -843,6 +849,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     color: var(--prose);
     font-size: 13px;
     line-height: 1.65;
+  }
+  .highlight-list ol li {
+    margin-bottom: 0.7rem;
+  }
+  .highlight-list ol li:last-child {
+    margin-bottom: 0;
   }
   .highlight-list a.insight-link,
   .theme-cluster ul a.insight-link {
