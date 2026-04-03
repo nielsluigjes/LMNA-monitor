@@ -126,7 +126,7 @@ def _reader_note_nl(primary: str | None, *, recruiting_trial: bool = False) -> s
 
 
 def enrich_publication(p: dict[str, Any]) -> dict[str, Any]:
-    text = _norm_text(p.get("title"), p.get("abstract"), p.get("journal"))
+    text = _norm_text(p.get("title"), p.get("journal"))
     rel = relevance_score(text)
     tids, primary = theme_hits(text)
     out = dict(p)
@@ -154,7 +154,7 @@ def enrich_trial(t: dict[str, Any]) -> dict[str, Any]:
 
 
 def enrich_news(n: dict[str, Any]) -> dict[str, Any]:
-    text = _norm_text(n.get("title"), n.get("summary"), n.get("source"))
+    text = _norm_text(n.get("title"), n.get("source"))
     rel = relevance_score(text)
     tids, primary = theme_hits(text)
     out = dict(n)
@@ -234,7 +234,7 @@ def build_digest(
             )
     themes_intro = (
         "Hieronder staan een paar veelvoorkomende onderwerpen onder de publicaties. "
-        "De groepering is automatisch (op woorden in titel en tekst); geen medische indeling, "
+        "De groepering is automatisch (op woorden in titel en tijdschrift); geen medische indeling, "
         "maar wel handig om te oriënteren."
     )
     empty_themes_note: str | None = None
@@ -249,8 +249,8 @@ def build_digest(
 
     return {
         "method_note": (
-            "Geen medisch advies. Wat je hier leest is automatisch geordend op woorden die passen bij LMNA en het hart; "
-            "op elke kaart staat een korte zin voor lezers. Controleer altijd in de originele bron."
+            "Geen medisch advies. Wat je hier leest is automatisch geordend op titel en tijdschrift (publicaties) "
+            "of titel en bron (nieuws); op elke kaart staat een korte zin voor lezers. Controleer altijd in de originele bron."
         ),
         "overview_line": overview_line,
         "recruiting_note": recruiting_note,

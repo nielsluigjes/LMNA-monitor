@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 LMNA Monitor: Dashboard Generator
-Reads lmna.db and produces a self-contained dashboard.html
+Reads lmna.db and produces a self-contained dashboard.html (metadata + links;
+geen abstracts of nieuwssamenvattingen in de embed).
 Run after scraper.py: python3 generate_dashboard.py
 """
 
@@ -11,7 +12,6 @@ from datetime import datetime
 from pathlib import Path
 
 from insight_engine import enrich_all
-from scraper import rss_html_to_plain
 
 DB_PATH   = Path(__file__).parent / "lmna.db"
 OUT_PATH  = Path(__file__).parent / "dashboard.html"
@@ -21,7 +21,8 @@ def load_data():
     con.row_factory = sqlite3.Row
 
     pubs = con.execute("""
-        SELECT * FROM publications ORDER BY pub_date DESC LIMIT 100
+        SELECT id, title, authors, journal, pub_date, url, fetched_at
+        FROM publications ORDER BY pub_date DESC LIMIT 100
     """).fetchall()
 
     trials = con.execute("""
@@ -35,12 +36,10 @@ def load_data():
     """).fetchall()
 
     news_rows = con.execute("""
-        SELECT * FROM news ORDER BY fetched_at DESC LIMIT 100
+        SELECT id, title, source, pub_date, url, fetched_at
+        FROM news ORDER BY fetched_at DESC LIMIT 100
     """).fetchall()
-    news = [
-        {**dict(row), "summary": rss_html_to_plain(row["summary"] or "")}
-        for row in news_rows
-    ]
+    news = [dict(row) for row in news_rows]
 
     stats = {
         "total_pubs": con.execute("SELECT COUNT(*) FROM publications").fetchone()[0],
@@ -282,6 +281,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin: 0;
     padding: 0;
     border: none;
+  }
+  .intro-disclaimer-section--footer {
+    border-top: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    border-bottom: none;
+    margin-top: 48px;
   }
   .intro-lead {
     margin-bottom: 0;
@@ -1175,6 +1179,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </div>
 </div>
 
+<section class="intro-disclaimer-section intro-disclaimer-section--footer" aria-label="Over bronnen en volledige teksten">
+  <p class="intro-disclaimer">Publicaties en nieuws tonen titel en link naar de bron; volledige teksten (abstract, artikel) staan bij de uitgever of bron.</p>
+</section>
+
 <script>
 (function initThemeToggle() {
   const KEY = "lmna-theme";
@@ -1287,7 +1295,7 @@ function renderInsights() {
       `<div class="insight-block">` +
         `<div class="highlight-list">` +
         `<span class="highlight-list__title">Vijf suggesties om mee te beginnen</span>` +
-        `<p class="highlight-list__lead">Dit zijn vijf publicaties uit dit overzicht die vaak aansluiten op LMNA en het hart. Titels zijn meestal Engelstalig en formeel; dat hoort zo. Ze zijn automatisch gekozen op woorden in titel en tekst; open de link als je verder wilt lezen.</p>` +
+        `<p class="highlight-list__lead">Dit zijn vijf publicaties uit dit overzicht die vaak aansluiten op LMNA en het hart. Titels zijn meestal Engelstalig en formeel; dat hoort zo. Ze zijn automatisch gekozen op woorden in titel en tijdschrift; open de link als je verder wilt lezen.</p>` +
         `<ol>` +
         hl.map(insightRecLi).join("") +
         `</ol></div></div>`
@@ -1400,7 +1408,6 @@ function renderPubs() {
   const filtered = DATA.publications.filter(p =>
     (p.title || "").toLowerCase().includes(pubFilter) ||
     (p.authors || "").toLowerCase().includes(pubFilter) ||
-    (p.abstract || "").toLowerCase().includes(pubFilter) ||
     (p.journal || "").toLowerCase().includes(pubFilter)
   );
   const sorted = sortPubsList(filtered);
@@ -1425,19 +1432,9 @@ function renderPubs() {
       <div class="card-meta">
         <strong>${p.journal || "-"}</strong>${p.authors ? " · " + p.authors : ""}
       </div>
-      ${p.abstract ? `
-        <div class="abstract" id="abs-${p.id}">${p.abstract}</div>
-        <span class="toggle-abstract" onclick="toggleAbs('${p.id}', this)">▸ samenvatting studie (Engels)</span>
-      ` : ""}
     </div>
   `;
   }).join("");
-}
-
-function toggleAbs(id, el) {
-  const abs = document.getElementById("abs-" + id);
-  abs.classList.toggle("open");
-  el.textContent = abs.classList.contains("open") ? "▾ verberg samenvatting" : "▸ samenvatting studie (Engels)";
 }
 
 // ── Trials ────────────────────────────────────────────────────────────────
@@ -1591,8 +1588,7 @@ function filterNews() {
 function renderNews() {
   const filtered = DATA.news.filter(n =>
     (n.title || "").toLowerCase().includes(newsFilter) ||
-    (n.source || "").toLowerCase().includes(newsFilter) ||
-    (n.summary || "").toLowerCase().includes(newsFilter)
+    (n.source || "").toLowerCase().includes(newsFilter)
   );
   const sorted = sortNewsList(filtered);
   document.getElementById("count-news").textContent =
@@ -1614,7 +1610,6 @@ function renderNews() {
       </div>
       ${nNote}
       <div class="card-meta"><strong>${n.source || "-"}</strong></div>
-      ${n.summary ? `<details class="news-sum-wrap"><summary>Korte tekst bij het bericht</summary><div class="news-summary">${escHtml(n.summary)}</div></details>` : ""}
     </div>
   `;
   }).join("");
@@ -1630,13 +1625,18 @@ renderNews();
 </html>
 """
 
+def _omit_key(records: list[dict], key: str) -> list[dict]:
+    """Drop fields that must not appear in the published dashboard embed."""
+    return [{k: v for k, v in r.items() if k != key} for r in records]
+
+
 def generate():
     pubs, trials, news, stats = load_data()
     pubs, trials, news, insights = enrich_all(pubs, trials, news)
     payload = {
-        "publications": pubs,
+        "publications": _omit_key(pubs, "abstract"),
         "trials": trials,
-        "news": news,
+        "news": _omit_key(news, "summary"),
         "stats": stats,
         "insights": insights,
     }
