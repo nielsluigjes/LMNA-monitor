@@ -16,7 +16,7 @@ Scrapet automatisch PubMed, ClinicalTrials.gov en nieuws. Publiceert dagelijks e
 3. **Root Directory:** `./` (standaard)  
 4. **Build Command:** leeg laten  
 5. **Install Command:** leeg laten  
-6. **Output Directory:** leeg laten (of `.` — de site staat al als `dashboard.html` in de repo)  
+6. **Output Directory:** leeg laten (of `.`; de site staat al als `dashboard.html` in de repo)  
 7. Deploy. Daarna: elke push naar `main` (o.a. de dagelijkse bot-commit) triggert automatisch een nieuwe productie-deploy.
 
 Commits met `[skip ci]` slaan alleen GitHub Actions over; Vercel blijft deployen via de gewone GitHub-webhook.

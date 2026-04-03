@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-LMNA Cardiac Disease Monitor — Scraper
+LMNA Cardiac Disease Monitor: Scraper
 Fetches: PubMed, ClinicalTrials.gov (wereldwijd + NL/DE/BE-locaties), RSS feeds
 Run manually or via cron: 0 7 * * * python3 scraper.py  (dagelijks 07:00, lokaal)
 """
@@ -54,7 +54,7 @@ NEWS_RSS_FEEDS = [
     "https://news.google.com/rss/search?q=LMNA+dilated+cardiomyopathy&hl=en-US&gl=US&ceid=US:en",
     "https://news.google.com/rss/search?q=LMNA+AV+block+bradycardia&hl=en-US&gl=US&ceid=US:en",
     "https://news.google.com/rss/search?q=laminopathy+cardiomyopathy&hl=en-US&gl=US&ceid=US:en",
-    # EU — regionaal nieuws (NL / DE / BE)
+    # EU, regionaal nieuws (NL / DE / BE)
     "https://news.google.com/rss/search?q=LMNA+laminopathie+cardiomyopathie&hl=nl&gl=NL&ceid=NL:nl",
     "https://news.google.com/rss/search?q=LMNA+Kardiomyopathie&hl=de&gl=DE&ceid=DE:de",
     "https://news.google.com/rss/search?q=LMNA+cardiomyopathie&hl=nl&gl=BE&ceid=BE:nl",
@@ -286,7 +286,7 @@ def fetch_news(con):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    print(f"\n🧬 LMNA Monitor — {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+    print(f"\n🧬 LMNA Monitor: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
     print("=" * 50)
     con = init_db()
     fetch_pubmed(con)
