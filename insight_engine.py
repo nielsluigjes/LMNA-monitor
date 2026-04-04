@@ -247,6 +247,8 @@ def build_digest(
     top_pubs = sorted(pubs, key=lambda x: (-(x.get("relevance") or 0), x.get("pub_date") or ""))[:5]
     highlights = [_pub_link_item(p, title_max=80) for p in top_pubs if p.get("title")]
 
+    theme_options = [{"id": tid, "label": lab} for tid, lab, _ in _THEMES]
+
     return {
         "method_note": (
             "Geen medisch advies. Wat je hier leest is automatisch geordend op titel en tijdschrift (publicaties) "
@@ -257,6 +259,7 @@ def build_digest(
         "themes_intro": themes_intro,
         "empty_themes_note": empty_themes_note,
         "theme_rows": theme_rows,
+        "theme_options": theme_options,
         "highlights": highlights,
         "recruiting_count": len(recruiting),
     }
