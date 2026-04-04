@@ -686,6 +686,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     box-shadow: var(--shadow-hover);
     transform: translateY(-2px);
   }
+  a.card.card--link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+  }
+  a.card.card--link:hover .card-title {
+    color: var(--accent);
+  }
   .card-header {
     display: flex;
     justify-content: space-between;
@@ -1554,7 +1563,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <section class="intro" aria-labelledby="intro-heading">
   <h2 id="intro-heading">Voor wie</h2>
   <div class="intro-lead-align">
-  <p class="intro-lead">Voor patiënten en gezinnen die LMNA-bronnen op één plek willen. Deze pagina toont het resultaat van een dagelijks geautomatiseerde zoekactie naar LMNA-bronnen: nieuws, publicaties en studies. Binnen deze resultaten kan verder gezocht worden naar wat voor jou relevant is.</p>
+  <p class="intro-lead">Voor onderzoekers, patiënten en geïnteresseerden die LMNA-bronnen op één plek willen. Deze pagina toont het resultaat van een dagelijks geautomatiseerde zoekactie naar LMNA-bronnen: nieuws, publicaties en studies. Binnen deze resultaten kan verder gezocht worden naar wat voor jou relevant is.</p>
   </div>
   <details class="intro-details">
     <summary>Uitleg: LMNA en het hart, en hoe je hier zoekt</summary>
@@ -2301,17 +2310,21 @@ function renderNews() {
     const nBadges = themeBadgesOnly(n.theme_ids, n.theme_labels);
     const nNote = readerNotePara(n.reader_note_nl);
     const nd = formatNlNewsDate(n.pub_date || n.fetched_at);
-    return `
-    <div class="card">
+    const url = String(n.url || "").trim();
+    const hasUrl = !!url;
+    const inner = `
       ${nBadges}
       <div class="card-header">
-        <div class="card-title"><span class="title-link-wrap"><a href="${escAttr(n.url)}" target="_blank" rel="noopener">${escHtml(n.title || "-")}</a>${EXT_LINK_ICON}</span></div>
+        <div class="card-title"><span class="title-link-wrap"><span class="card-title-text">${escHtml(n.title || "-")}</span>${hasUrl ? EXT_LINK_ICON : ""}</span></div>
         <div class="card-date">${escHtml(nd)}</div>
       </div>
       ${nNote}
       <div class="card-meta"><strong>${escHtml(n.source || "-")}</strong></div>
-    </div>
-  `;
+    `;
+    if (hasUrl) {
+      return `<a class="card card--link" href="${escAttr(url)}" target="_blank" rel="noopener">${inner}</a>`;
+    }
+    return `<div class="card">${inner}</div>`;
   }).join("");
 }
 
