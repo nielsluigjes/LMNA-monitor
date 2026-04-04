@@ -1155,6 +1155,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 <!-- NEWS -->
 <div id="panel-news" class="panel active">
+  <p class="panel-hint">Bronnen: officiële RSS-feeds (o.a. PubMed-zoekalerts, ClinicalTrials.gov, Circulation, open access). Geen commercieel nieuwsaggregaat.</p>
   <div class="sort-row" aria-label="Sorteer nieuws">
     <span class="chip-label">Sorteer</span>
     <button type="button" class="filter-btn active" onclick="setNewsSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
@@ -1229,7 +1230,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </div>
 
 <section class="intro-disclaimer-section intro-disclaimer-section--footer" aria-label="Afsluiting: bronnen, disclaimer en contact">
-  <p class="intro-disclaimer">Deze site verzamelt alleen titels en links naar openbaar beschikbare artikelen, nieuwsberichten en klinische studies over LMNA-gerelateerde aandoeningen. Voor de volledige inhoud volg je de link naar de uitgever, nieuwsbron of officiële studiepagina. Rechten op de onderliggende inhoud berusten bij de respectieve rechthebbenden.</p>
+  <p class="intro-disclaimer">Deze site verzamelt alleen titels en links naar openbaar beschikbare artikelen en klinische studies over LMNA-gerelateerde aandoeningen, samengesteld uit openbare RSS-feeds van databases en uitgevers (geen volledige artikelen of nieuwssamenvattingen hierin). Voor de volledige inhoud volg je de link naar de uitgever of officiële studiepagina. Rechten op de onderliggende inhoud berusten bij de respectieve rechthebbenden.</p>
   <p class="intro-disclaimer intro-disclaimer--medical">Dit is geen medisch advies. Raadpleeg altijd een arts voor persoonlijke medische vragen.</p>
   <p class="intro-disclaimer">Vragen of verwijderverzoeken: <a href="mailto:lmna.monitor@gmail.com">lmna.monitor@gmail.com</a></p>
 </section>
@@ -1422,6 +1423,25 @@ function quickTrial(q) {
 
 function newsItemDate(n) {
   return String(n.pub_date || n.fetched_at || "");
+}
+
+/** Leesbare datum voor nieuwskaarten (nl-NL), geen ruwe ISO zoals 2026-04-02T00:00. */
+function formatNlNewsDate(raw) {
+  const s = String(raw || "").trim();
+  if (!s) return "";
+  let d = new Date(s);
+  if (Number.isNaN(d.getTime())) {
+    const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (m) d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  }
+  if (Number.isNaN(d.getTime())) {
+    return s.length > 28 ? s.slice(0, 28) + "…" : s;
+  }
+  return d.toLocaleDateString("nl-NL", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 // ── Publications ──────────────────────────────────────────────────────────
@@ -1657,7 +1677,7 @@ function renderNews() {
       ${nBadges}
       <div class="card-header">
         <div class="card-title"><a href="${n.url}" target="_blank" rel="noopener">${n.title || "-"}</a></div>
-        <div class="card-date">${(n.pub_date || "").substring(0, 16)}</div>
+        <div class="card-date">${formatNlNewsDate(n.pub_date || n.fetched_at)}</div>
       </div>
       ${nNote}
       <div class="card-meta"><strong>${n.source || "-"}</strong></div>
