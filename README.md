@@ -1,6 +1,6 @@
 # LMNA Cardiac Disease Monitor
 
-Scrapet automatisch PubMed, ClinicalTrials.gov en nieuws. Publiceert dagelijks een dashboard op GitHub Pages en/of Vercel.
+Scrapet automatisch PubMed, ClinicalTrials.gov en een **nieuws-/feedtab** met uitsluitend officiële RSS-bronnen (zoekalerts op PubMed, ClinicalTrials.gov RSS, tijdschrift- en open-access feeds; geen commercieel nieuwsaggregaat). Publiceert dagelijks een dashboard op GitHub Pages en/of Vercel.
 
 **URL’s (na setup):**
 
@@ -72,3 +72,4 @@ Stuur je **Vercel-URL** (of de `github.io`-link) door. Elke dag 07:00 UTC automa
 - GitHub Pages: gratis (optioneel)
 - Vercel hobby/free tier: voldoende voor deze statische site
 - Alle APIs (PubMed, ClinicalTrials, RSS): gratis, geen keys nodig
+- RSS-feeds staan in `NEWS_RSS_FEEDS` in `scraper.py`; bij uitval of gewijzigde URL’s bij een bron de lijst aanpassen
