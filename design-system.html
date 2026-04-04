@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<script>document.documentElement.removeAttribute("data-theme");</script>
+<title>LMNA-Monitor — design system (lokaal)</title>
+<link rel="preload" href="/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plus-jakarta-sans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/fonts/fonts.css">
+<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="/design-system-page.css">
+</head>
+<body class="ds-body-split">
+<a class="skip-link" href="#main-content">Ga naar inhoud</a>
+<header class="ds-global-header">
+  <div class="logo-block">
+    <h1>Design system</h1>
+    <p>Overzicht van tokens en UI-patronen uit <code style="font-family:'DM Mono',monospace;font-size:0.9em">dashboard.html</code>. Twee kolommen: <strong>night</strong> en <strong>day</strong> naast elkaar. Alleen voor lokaal gebruik; staat in <code style="font-family:'DM Mono',monospace;font-size:0.9em">.gitignore</code>.</p>
+    <p class="ds-back"><a href="dashboard.html">← Terug naar dashboard</a></p>
+  </div>
+</header>
+
+<template id="ds-content-template">
+  <section class="ds-section" aria-label="Kleuren (CSS-variabelen)">
+    <h2>Kleuren (CSS-variabelen)</h2>
+    <p class="ds-lead">Merkpalet — links night, rechts day. Drie lagen: hoofdvlakken, accenten voor UI, thema’s voor taxonomie.</p>
+
+    <div class="ds-swatch-group ds-swatch-group--brand">
+      <h3 class="ds-sub">Drie hoofdkleuren</h3>
+      <p class="ds-swatch-intro">Basis van het merk: donkergroen (diepte), fel groen (accent/mint), lichtgroen (licht oppervlak). Vaste referentie; tokens hieronder zijn daaruit afgeleid.</p>
+      <div class="ds-swatches ds-swatches--brand">
+        <div class="ds-swatch ds-swatch--brand"><div class="ds-swatch__color" style="background:#002520"></div><div class="ds-swatch__meta"><strong>Donkergroen</strong><span>#002520</span></div></div>
+        <div class="ds-swatch ds-swatch--brand"><div class="ds-swatch__color" style="background:#52c48a"></div><div class="ds-swatch__meta"><strong>Fel groen</strong><span>#52c48a</span></div></div>
+        <div class="ds-swatch ds-swatch--brand"><div class="ds-swatch__color" style="background:#c4f2d7"></div><div class="ds-swatch__meta"><strong>Lichtgroen</strong><span>#c4f2d7</span></div></div>
+      </div>
+    </div>
+
+    <div class="ds-swatch-group">
+      <h3 class="ds-sub">Hoofdkleuren</h3>
+      <p class="ds-swatch-intro">Achtergronden, oppervlakken, teksthiërarchie, rand en buitenste schermrand.</p>
+      <div class="ds-swatches">
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--bg)"></div><div class="ds-swatch__meta"><strong>bg</strong><span>--bg</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--surface)"></div><div class="ds-swatch__meta"><strong>surface</strong><span>--surface</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--surface2)"></div><div class="ds-swatch__meta"><strong>surface2</strong><span>--surface2</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--surface-elevated)"></div><div class="ds-swatch__meta"><strong>surface-elevated</strong><span>--surface-elevated</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--bg);box-shadow:inset 0 0 0 3px var(--border)"></div><div class="ds-swatch__meta"><strong>border</strong><span>--border</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--outer-bg)"></div><div class="ds-swatch__meta"><strong>outer-bg</strong><span>--outer-bg</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--text)"></div><div class="ds-swatch__meta"><strong>text</strong><span>--text</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--muted)"></div><div class="ds-swatch__meta"><strong>muted</strong><span>--muted</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--prose)"></div><div class="ds-swatch__meta"><strong>prose</strong><span>--prose</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--prose-dim)"></div><div class="ds-swatch__meta"><strong>prose-dim</strong><span>--prose-dim</span></div></div>
+      </div>
+    </div>
+
+    <div class="ds-swatch-group">
+      <h3 class="ds-sub">Accent-kleuren</h3>
+      <p class="ds-swatch-intro">Primair (merk), secundair (info/links), tertiair (aandacht), fout, plus semantiek voor status en badges.</p>
+      <div class="ds-swatches">
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--accent)"></div><div class="ds-swatch__meta"><strong>accent</strong><span>--accent</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--accent2)"></div><div class="ds-swatch__meta"><strong>accent2</strong><span>--accent2</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--accent3)"></div><div class="ds-swatch__meta"><strong>accent3</strong><span>--accent3</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--danger)"></div><div class="ds-swatch__meta"><strong>danger</strong><span>--danger</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--active)"></div><div class="ds-swatch__meta"><strong>active</strong><span>--active</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--recruiting)"></div><div class="ds-swatch__meta"><strong>recruiting</strong><span>--recruiting</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--completed)"></div><div class="ds-swatch__meta"><strong>completed</strong><span>--completed</span></div></div>
+      </div>
+    </div>
+
+    <div class="ds-swatch-group">
+      <h3 class="ds-sub">Themakleuren</h3>
+      <p class="ds-swatch-intro">Vaste kleuren per inhoudelijke categorie (filters, tags, clusters); zelfde id’s als in de data.</p>
+      <div class="ds-swatches">
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--theme-cat-dcm)"></div><div class="ds-swatch__meta"><strong>DCM</strong><span>--theme-cat-dcm</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--theme-cat-conduction)"></div><div class="ds-swatch__meta"><strong>Geleiding</strong><span>--theme-cat-conduction</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--theme-cat-lmna)"></div><div class="ds-swatch__meta"><strong>LMNA</strong><span>--theme-cat-lmna</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--theme-cat-therapy)"></div><div class="ds-swatch__meta"><strong>Therapie</strong><span>--theme-cat-therapy</span></div></div>
+        <div class="ds-swatch"><div class="ds-swatch__color" style="background:var(--theme-cat-imaging)"></div><div class="ds-swatch__meta"><strong>Beeldvorming</strong><span>--theme-cat-imaging</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ds-section" aria-label="Typografie">
+    <h2>Typografie</h2>
+    <p class="ds-lead">Plus Jakarta Sans (body), Fraunces (titels), DM Mono (cijfers, labels, meta).</p>
+    <div class="ds-type-sample">
+      <div class="ds-type-label">Fraunces — logo / koppen</div>
+      <div class="logo-block"><h1 style="font-size:clamp(1.75rem,4vw,2.25rem)">Voorbeeld kop Fraunces</h1></div>
+    </div>
+    <div class="ds-type-sample">
+      <div class="ds-type-label">Plus Jakarta Sans — body (1rem, leading 1.625)</div>
+      <p style="color:var(--prose);max-width:40rem">Dit is doorlopende tekst in Plus Jakarta Sans, zoals in de intro en kaarten. Gebruik <strong style="color:var(--text)">strong</strong> voor nadruk.</p>
+    </div>
+    <div class="ds-type-sample">
+      <div class="ds-type-label">DM Mono — labels &amp; cijfers</div>
+      <p class="last-updated" style="text-align:left">LABEL<span>012 · NCT12345678</span></p>
+    </div>
+  </section>
+
+  <section class="ds-section" aria-label="Radius en schaduw">
+    <h2>Radius &amp; schaduw</h2>
+    <p class="ds-lead">Design tokens voor hoeken en diepte.</p>
+    <h3 class="ds-sub">Border radius</h3>
+    <div class="ds-radius-row">
+      <div class="ds-radius-item"><div class="ds-radius-box" style="border-radius:var(--radius-sm)"></div><span>--radius-sm</span></div>
+      <div class="ds-radius-item"><div class="ds-radius-box" style="border-radius:var(--radius-md)"></div><span>--radius-md</span></div>
+      <div class="ds-radius-item"><div class="ds-radius-box" style="border-radius:var(--radius-lg)"></div><span>--radius-lg</span></div>
+      <div class="ds-radius-item"><div class="ds-radius-box" style="border-radius:var(--radius-pill);width:96px"></div><span>--radius-pill</span></div>
+    </div>
+    <h3 class="ds-sub">Shadow</h3>
+    <div class="ds-shadow-row">
+      <div class="ds-shadow-item"><div class="ds-shadow-box" style="box-shadow:var(--shadow-sm)"></div><span>--shadow-sm</span></div>
+      <div class="ds-shadow-item"><div class="ds-shadow-box" style="box-shadow:var(--shadow-md)"></div><span>--shadow-md</span></div>
+      <div class="ds-shadow-item"><div class="ds-shadow-box" style="box-shadow:var(--shadow-hover)"></div><span>--shadow-hover</span></div>
+    </div>
+  </section>
+
+  <section class="ds-section" aria-label="Banners en intro">
+    <h2>Banners &amp; intro</h2>
+    <p class="ds-lead">Disclaimer-strip en intro-achtige vlakken.</p>
+    <div class="intro-disclaimer-section" style="margin-bottom:16px"><p class="intro-disclaimer">Waarschuwingsstrip (uppercase in productie boven aan)</p></div>
+    <section class="intro" aria-label="Voorbeeld intro"><h2>Voorbeeld sectiekop</h2><p class="intro-lead">Intro-tekst met <code style="font-family:'DM Mono',monospace;font-size:0.92em">--insights-bg</code> en blur.</p></section>
+  </section>
+
+  <section class="ds-section" aria-label="Knoppen, chips en tabs">
+    <h2>Knoppen, chips &amp; tabs</h2>
+    <p class="ds-lead">Interactieve patronen uit het dashboard.</p>
+    <div class="ds-row" style="margin-bottom:16px">
+      <button type="button" class="filter-btn active" aria-pressed="true">Actieve filter</button>
+      <button type="button" class="filter-btn" aria-pressed="false">Rust</button>
+    </div>
+    <div class="chip-row" style="margin-bottom:16px">
+      <span class="chip-label">Snelzoeken</span>
+      <button type="button" class="chip" aria-pressed="false">dilated cardiomyopathy</button>
+      <button type="button" class="chip active" aria-pressed="true">Geselecteerd</button>
+      <button type="button" class="chip chip--all" aria-pressed="false">Alles tonen</button>
+    </div>
+    <p class="ds-sub">Thema-chips (kleur per categorie)</p>
+    <div class="chip-row theme-filter-row" style="margin-bottom:8px">
+      <button type="button" class="chip theme-chip" data-theme-id="dcm" aria-pressed="false">DCM</button>
+      <button type="button" class="chip theme-chip" data-theme-id="conduction" aria-pressed="false">Geleiding</button>
+      <button type="button" class="chip theme-chip active" data-theme-id="lmna" aria-pressed="true">LMNA</button>
+      <button type="button" class="chip theme-chip" data-theme-id="therapy" aria-pressed="false">Therapie</button>
+      <button type="button" class="chip theme-chip" data-theme-id="imaging" aria-pressed="false">Beeldvorming</button>
+    </div>
+    <p class="ds-note">Inline thema-tags op kaarten:</p>
+    <div class="ds-inline-tags" style="margin-bottom:16px">
+      <span class="theme-chip" data-theme="dcm">DCM</span>
+      <span class="theme-chip" data-theme="lmna">LMNA</span>
+      <span class="theme-chip" data-theme="therapy">Therapie</span>
+    </div>
+    <h3 class="ds-sub">Tab-balk (statisch voorbeeld)</h3>
+    <div class="ds-tabs-demo">
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab active" role="tab" aria-selected="true">Publicaties</button>
+        <button type="button" class="tab" role="tab" aria-selected="false">Studies</button>
+        <button type="button" class="tab" role="tab" aria-selected="false">Nieuws</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="ds-section" aria-label="Statistiektegels">
+    <h2>Statistiektegels</h2>
+    <div class="stats-bar" style="border-bottom:none;padding-left:0;padding-right:0">
+      <div class="stat"><div class="stat-num green">51</div><div class="stat-label">Publicaties</div></div>
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">Studies</div></div>
+      <div class="stat"><div class="stat-num green">1</div><div class="stat-label">Werving</div></div>
+      <div class="stat"><div class="stat-num">40</div><div class="stat-label">Nieuws</div></div>
+    </div>
+  </section>
+
+  <section class="ds-section" aria-label="Zoekveld en filterblok">
+    <h2>Zoekveld &amp; filterblok</h2>
+    <div class="search-bar" style="max-width:28rem"><input type="search" readonly placeholder="Zoek in resultaten…" aria-label="Voorbeeld zoekveld" /></div>
+    <div class="filter-section filter-section--search" style="margin-top:20px;max-width:36rem">
+      <h3 class="filter-section__title">Zoeken in publicaties</h3>
+      <p class="filter-section__hint">Voorbeeld van het donkere filterblok met zoekbalk en snelkeuze-chips.</p>
+      <div class="search-bar"><input type="search" readonly placeholder="Zoek op titel, auteur…" /></div>
+      <div class="chip-row">
+        <button type="button" class="chip" aria-pressed="false">LMNA</button>
+        <button type="button" class="chip active" aria-pressed="true">cardiomyopathy</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="ds-section" aria-label="Kaarten, badges en studies">
+    <h2>Kaarten, badges &amp; studies</h2>
+    <div class="card-grid" style="max-width:40rem">
+      <article class="card">
+        <div class="card-badges">
+          <span class="theme-chip" data-theme="dcm">DCM</span>
+          <span class="theme-chip" data-theme="lmna">LMNA</span>
+        </div>
+        <div class="card-header">
+          <div class="card-title">Voorbeeld publicatiekaart</div>
+          <div class="card-date">2026</div>
+        </div>
+        <p class="card-meta"><strong>Journal</strong> · voorbeeld</p>
+        <p class="abstract open" style="max-height:none">Abstract of lezersnotitie in kleinere, gedimde prose.</p>
+      </article>
+      <div class="trial-card">
+        <div class="card-badges"><span class="theme-chip" data-theme="therapy">Therapie</span></div>
+        <div class="trial-header">
+          <div class="trial-title"><span class="title-link-wrap"><a href="#">Titel klinische studie</a></span></div>
+          <span class="badge badge-recruiting">recruiting</span>
+        </div>
+        <div class="trial-meta"><span><strong>NCT00000000</strong></span><span>Fase: <strong>2</strong></span></div>
+      </div>
+    </div>
+    <h3 class="ds-sub">Status-badges (studies)</h3>
+    <div class="ds-row">
+      <span class="badge badge-recruiting">recruiting</span>
+      <span class="badge badge-active">active</span>
+      <span class="badge badge-completed">completed</span>
+      <span class="badge badge-other">unknown</span>
+    </div>
+  </section>
+
+  <section class="ds-section" aria-label="Insights en themablokken">
+    <h2>Insights &amp; themablokken</h2>
+    <p class="ds-lead">Kantlijn-inzichten: methode-notitie en thema-cluster.</p>
+    <div style="max-width:40rem">
+      <p class="insights-method">Voorbeeld <code style="font-family:'DM Mono',monospace;font-size:0.9em">.insights-method</code> — uitleg met linkerrand.</p>
+      <div class="theme-cluster" data-theme="lmna">
+        <h3 class="theme-cluster-heading"><button type="button" class="theme-cluster-title-btn" data-theme-id="lmna">LMNA / lamin</button></h3>
+        <p class="theme-cluster-blurb">Korte omschrijving van het thema.</p>
+        <p class="count">3 voorbeelden in dit blok</p>
+        <ul><li><a class="insight-link" href="#">Voorbeeldlink</a></li></ul>
+      </div>
+      <div class="highlight-list" style="margin-top:16px">
+        <span class="highlight-list__title">Waar begin je?</span>
+        <p class="highlight-list__lead">Leadtekst voor een genummerde lijst.</p>
+        <ol><li>Eerste suggestie</li><li>Tweede suggestie</li></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="ds-section" aria-label="Lege staat">
+    <h2>Lege staat</h2>
+    <div class="empty">
+      <div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>
+      Geen resultaten; pas zoekterm of filter aan.
+    </div>
+  </section>
+
+  <section class="ds-section" aria-label="Footer-banner">
+    <h2>Footer-banner</h2>
+    <div class="intro-disclaimer-section intro-disclaimer-section--footer ds-split-footer-band">
+      <p class="intro-disclaimer">Voorbeeldfooter: bronvermelding en contact.</p>
+      <p class="intro-disclaimer intro-disclaimer--medical">Medische disclaimerregel</p>
+    </div>
+  </section>
+</template>
+<div class="ds-split">
+  <div class="ds-split__col ds-split__col--night" aria-label="Night mode">
+    <div class="ds-split__banner">Night · donker</div>
+    <div class="site-shell">
+      <main class="ds-main" id="main-content"></main>
+    </div>
+  </div>
+  <div class="ds-split__col ds-split__col--day" data-theme="light" aria-label="Day mode">
+    <div class="ds-split__banner">Day · licht</div>
+    <div class="site-shell">
+      <main class="ds-main" id="ds-main-day"></main>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var tpl = document.getElementById("ds-content-template");
+  var night = document.getElementById("main-content");
+  var day = document.getElementById("ds-main-day");
+  if (!tpl || !night || !day) return;
+  night.appendChild(tpl.content.cloneNode(true));
+  day.appendChild(tpl.content.cloneNode(true));
+})();
+</script>
+</body>
+</html>
