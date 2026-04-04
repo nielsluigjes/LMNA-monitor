@@ -304,7 +304,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     align-items: center;
     border-top: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
     border-bottom: none;
-    margin-top: 48px;
     padding-top: 40px;
     padding-bottom: 40px;
   }
