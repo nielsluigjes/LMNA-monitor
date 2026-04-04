@@ -1016,6 +1016,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .filter-section--theme .filter-section__title {
     margin-bottom: 12px;
   }
+  .filter-theme-embedded {
+    margin-top: 4px;
+    margin-bottom: 8px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+  .filter-theme-embedded .filter-section__title {
+    margin-bottom: 12px;
+  }
   .theme-filter-row {
     padding-top: 0;
     margin-top: 0;
@@ -1512,7 +1521,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }
     .stat { padding: 18px 16px; }
     .tabs { padding: 0 20px; min-height: 52px; overflow-x: auto; flex-wrap: nowrap; }
-    .filter-section--theme { padding-top: 14px; }
+    .filter-section--theme,
+    .filter-theme-embedded { padding-top: 14px; }
     main { padding: 22px 20px 36px; }
   }
 </style>
@@ -1632,19 +1642,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <div class="search-bar">
       <input type="text" id="search-news" placeholder="Typ om te zoeken in titel of tekst…" oninput="filterNews()" autocomplete="off" aria-describedby="filter-search-news-hint">
     </div>
-    <p class="filter-section__hint" id="filter-search-news-hint">De knoppen hieronder vullen het zoekveld met een veelgebruikte term.</p>
-    <div class="chip-row" aria-label="Veelgebruikte zoektermen" aria-describedby="filter-search-news-hint">
-      <span class="chip-label">Snel zoeken</span>
-      <button type="button" class="chip chip--all" onclick="quickNews('')">Alles tonen</button>
-      <button type="button" class="chip" onclick="quickNews('lamin')">LMNA / lamin</button>
-      <button type="button" class="chip" onclick="quickNews('cardiomyopathy')">cardiomyopathie</button>
-      <button type="button" class="chip" onclick="quickNews('dilated')">DCM</button>
-      <button type="button" class="chip" onclick="quickNews('conduction')">geleiding</button>
+    <p class="filter-section__hint" id="filter-search-news-hint">Typ hierboven om te zoeken in titel of tekst. Kies hieronder een onderwerp om te verfijnen.</p>
+    <div class="filter-theme-embedded" aria-labelledby="filter-theme-news-title">
+      <h3 class="filter-section__title" id="filter-theme-news-title">Filter op thema</h3>
+      <div class="chip-row theme-filter-row" aria-label="Filter op onderwerp" aria-describedby="filter-search-news-hint"></div>
     </div>
-  </div>
-  <div class="filter-section filter-section--theme" aria-labelledby="filter-theme-news-title">
-    <h3 class="filter-section__title" id="filter-theme-news-title">Filter op thema</h3>
-    <div class="chip-row theme-filter-row" aria-label="Filter op onderwerp"></div>
   </div>
   <div class="panel-toolbar">
     <div class="result-count" id="count-news">
@@ -2009,10 +2011,6 @@ function switchTab(name, btn) {
   });
 })();
 
-function quickNews(q) {
-  document.getElementById("search-news").value = q;
-  filterNews();
-}
 function quickPub(q) {
   document.getElementById("search-pubs").value = q;
   filterPubs();
