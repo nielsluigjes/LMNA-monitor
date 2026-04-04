@@ -64,7 +64,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <meta name="robots" content="noindex, nofollow">
 <script>(function(){var k="lmna-theme",r=document.documentElement,s=localStorage.getItem(k),l=window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches;if(s==="light"||(s!=="dark"&&l))r.setAttribute("data-theme","light");})();</script>
 <title>LMNA-Monitor: overzicht</title>
-<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="/fonts/fonts.css">
 <style>
   :root {
     --radius-sm: 10px;
@@ -291,7 +291,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     color: var(--muted);
     font-size: var(--text-micro);
     text-align: right;
-    font-family: 'DM Mono', monospace;
+    font-family: 'DM Mono', 'Courier New', Courier, monospace;
     margin-top: 14px;
     width: 100%;
   }
@@ -532,11 +532,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .intro-search-terms-label {
     font-size: var(--text-micro);
     color: var(--muted);
-    font-family: 'DM Mono', monospace;
+    font-family: 'DM Mono', 'Courier New', Courier, monospace;
     margin-right: 4px;
   }
   .intro-search-term {
-    font-family: 'DM Mono', monospace;
+    font-family: 'DM Mono', 'Courier New', Courier, monospace;
     font-size: var(--text-micro);
     color: var(--accent);
     background: var(--chip-accent-bg);
@@ -581,7 +581,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-top: 10px;
-    font-family: 'DM Mono', monospace;
+    font-family: 'DM Mono', 'Courier New', Courier, monospace;
     font-weight: 500;
   }
 
@@ -727,7 +727,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .card-meta {
     color: var(--muted);
     font-size: var(--text-micro);
-    font-family: 'DM Mono', monospace;
+    font-family: 'DM Mono', 'Courier New', Courier, monospace;
     margin-bottom: 10px;
   }
   .card-meta strong { color: var(--accent2); }
@@ -793,7 +793,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .trial-title .title-link-wrap a:hover { color: var(--accent2); }
   .trial-title a { color: inherit; text-decoration: none; }
   .trial-title a:hover { color: var(--accent2); }
-  .trial-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: var(--text-micro); font-family: 'DM Mono', monospace; color: var(--muted); }
+  .trial-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: var(--text-micro); font-family: 'DM Mono', 'Courier New', Courier, monospace; color: var(--muted); }
   .trial-meta span strong { color: var(--text); }
 
   /* EMPTY */
@@ -857,7 +857,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .chip-label {
     font-size: var(--text-micro);
     color: var(--muted);
-    font-family: 'DM Mono', monospace;
+    font-family: 'DM Mono', 'Courier New', Courier, monospace;
     letter-spacing: 0.06em;
     margin-right: 4px;
   }
@@ -942,7 +942,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   /* Snelzoeken: zelfde pill als .intro-search-term (DM Mono, accent, chip-accent kleuren) */
   .filter-section--search .chip-row:not(.theme-filter-row) .chip:not(.theme-chip):not(.chip--all):not(.active):not([aria-pressed="true"]) {
-    font-family: 'DM Mono', monospace;
+    font-family: 'DM Mono', 'Courier New', Courier, monospace;
     font-size: var(--text-micro);
     font-weight: 400;
     color: var(--accent);
@@ -961,7 +961,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   .filter-section--search .chip-row:not(.theme-filter-row) .chip:not(.theme-chip):not(.chip--all).active,
   .filter-section--search .chip-row:not(.theme-filter-row) .chip:not(.theme-chip):not(.chip--all)[aria-pressed="true"] {
-    font-family: 'DM Mono', monospace;
+    font-family: 'DM Mono', 'Courier New', Courier, monospace;
     font-size: var(--text-micro);
     font-weight: 400;
     color: var(--accent);
@@ -977,7 +977,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .filter-section--search .chip-row:not(.theme-filter-row) .chip.chip--all:hover,
   .filter-section--search .chip-row:not(.theme-filter-row) .chip.chip--all.active,
   .filter-section--search .chip-row:not(.theme-filter-row) .chip.chip--all[aria-pressed="true"] {
-    font-family: 'DM Mono', monospace;
+    font-family: 'DM Mono', 'Courier New', Courier, monospace;
     font-size: var(--text-micro);
     font-weight: 400;
     padding: 6px 12px;
@@ -1164,7 +1164,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin: 0 0 8px;
   }
   .theme-cluster .count {
-    font-family: 'DM Mono', monospace;
+    font-family: 'DM Mono', 'Courier New', Courier, monospace;
     font-size: var(--text-micro);
     color: var(--muted);
     margin-bottom: 8px;
