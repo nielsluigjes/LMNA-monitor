@@ -98,6 +98,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     --filter-chip-hover-bg: rgba(159, 232, 138, 0.1);
     --summary-hover-bg: rgba(109, 212, 255, 0.08);
     --tabs-bar-bg: rgba(8, 10, 9, 0.72);
+    /* Zelfde als .dashboard-split op brede schermen: intro uitlijnen met hoofdkolom */
+    --dashboard-grid-cols: minmax(0, 1fr) minmax(280px, 400px);
   }
   html[data-theme="light"] {
     color-scheme: light;
@@ -239,6 +241,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   html[data-theme="light"] .theme-toggle__moon { display: inline-flex; }
 
   /* INTRO */
+  .intro-lead-align {
+    display: block;
+  }
   .intro {
     padding: 28px 48px 32px;
     border-bottom: 1px solid var(--border);
@@ -272,21 +277,52 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .intro-disclaimer-section .intro-disclaimer {
     flex: 0 1 auto;
     width: 100%;
-    font-size: 13px;
-    font-weight: 700;
-    line-height: 1.45;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.55;
+    letter-spacing: 0;
+    text-transform: none;
     color: #fff;
-    max-width: 100%;
+    max-width: 56rem;
     margin: 0;
     padding: 0;
     border: none;
   }
+  /* Smalle banner onder de header: waarschuwingsstrip in hoofdletters */
+  .intro-disclaimer-section:not(.intro-disclaimer-section--footer) > .intro-disclaimer {
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    font-weight: 700 !important;
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+    max-width: 100% !important;
+    font-variant: normal;
+  }
   .intro-disclaimer-section--footer {
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
     border-top: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
     border-bottom: none;
     margin-top: 48px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+  .intro-disclaimer-section--footer > .intro-disclaimer {
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-variant: normal;
+  }
+  .intro-disclaimer-section--footer > .intro-disclaimer.intro-disclaimer--medical {
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+  }
+  .intro-disclaimer-section--footer .intro-disclaimer a {
+    color: inherit;
+    text-decoration: underline;
   }
   .intro-lead {
     margin-bottom: 0;
@@ -935,9 +971,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     min-width: 0;
   }
   @media (min-width: 960px) {
+    .intro-lead-align {
+      display: grid;
+      grid-template-columns: var(--dashboard-grid-cols);
+      align-items: start;
+    }
+    .intro-lead-align .intro-lead {
+      grid-column: 1;
+      min-width: 0;
+    }
     .dashboard-split {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 400px);
+      grid-template-columns: var(--dashboard-grid-cols);
       align-items: start;
     }
     .dashboard-split__main {
@@ -987,6 +1032,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     .intro-disclaimer-section {
       padding: 10px 20px;
     }
+    .intro-disclaimer-section--footer {
+      padding: 40px 20px;
+    }
     .intro { padding: 22px 20px; }
     .insights {
       display: none;
@@ -1026,7 +1074,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 <section class="intro" aria-labelledby="intro-heading">
   <h2 id="intro-heading">Voor wie</h2>
+  <div class="intro-lead-align">
   <p class="intro-lead">Voor patiënten en gezinnen die LMNA-bronnen op één plek willen. Deze pagina toont het resultaat van een dagelijks geautomatiseerde zoekactie naar LMNA-bronnen: nieuws, publicaties en studies. Binnen deze resultaten kan verder gezocht worden naar wat voor jou relevant is.</p>
+  </div>
   <details class="intro-details">
     <summary>Uitleg: LMNA en het hart, en hoe je hier zoekt</summary>
     <div class="intro-details-body">
@@ -1180,8 +1230,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </div>
 </div>
 
-<section class="intro-disclaimer-section intro-disclaimer-section--footer" aria-label="Over bronnen en volledige teksten">
-  <p class="intro-disclaimer">Publicaties en nieuws tonen titel en link naar de bron; volledige teksten (abstract, artikel) staan bij de uitgever of bron.</p>
+<section class="intro-disclaimer-section intro-disclaimer-section--footer" aria-label="Afsluiting: bronnen, disclaimer en contact">
+  <p class="intro-disclaimer">Deze site verzamelt alleen titels en links naar openbaar beschikbare artikelen, nieuwsberichten en klinische studies over LMNA-gerelateerde aandoeningen. Voor de volledige inhoud volg je de link naar de uitgever, nieuwsbron of officiële studiepagina. Rechten op de onderliggende inhoud berusten bij de respectieve rechthebbenden.</p>
+  <p class="intro-disclaimer intro-disclaimer--medical">Dit is geen medisch advies. Raadpleeg altijd een arts voor persoonlijke medische vragen.</p>
+  <p class="intro-disclaimer">Vragen of verwijderverzoeken: <a href="mailto:lmna.monitor@gmail.com">lmna.monitor@gmail.com</a></p>
 </section>
 
 <script>
