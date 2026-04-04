@@ -402,9 +402,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     max-width: 100% !important;
     font-variant: normal;
   }
-  html[data-theme="light"] .intro-disclaimer-section:not(.intro-disclaimer-section--footer) > .intro-disclaimer {
-    color: var(--accent);
-  }
+  /* Alleen night: donkergroene tekst op de band; day blijft --band-text (wit) */
   html:not([data-theme="light"]) .intro-disclaimer-section:not(.intro-disclaimer-section--footer) > .intro-disclaimer {
     color: var(--bg);
   }
@@ -416,14 +414,22 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     border-bottom: none;
     padding-top: 40px;
     padding-bottom: 40px;
-    /* Zelfde vlak als .dashboard-split__main / #main-content */
-    background: var(--surface);
+  }
+  /* Night: zelfde vlak als main; day: erft --band-accent-bg van .intro-disclaimer-section */
+  html:not([data-theme="light"]) .intro-disclaimer-section--footer {
+    background: var(--insights-bg);
   }
   .intro-disclaimer-section--footer > .intro-disclaimer {
     text-transform: none !important;
     letter-spacing: 0 !important;
     font-variant: normal;
     color: var(--prose);
+  }
+  html[data-theme="light"] .intro-disclaimer-section--footer > .intro-disclaimer {
+    color: var(--band-text);
+  }
+  html[data-theme="light"] .intro-disclaimer-section--footer > .intro-disclaimer.intro-disclaimer--medical {
+    color: var(--band-text);
   }
   .intro-disclaimer-section--footer > .intro-disclaimer.intro-disclaimer--medical {
     font-weight: 700 !important;
@@ -1470,9 +1476,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   /* Night: zelfde tint als .insights (insights-bg); light blijft effen --surface */
   html:not([data-theme="light"]) .dashboard-split__main {
-    background: var(--insights-bg);
-  }
-  html:not([data-theme="light"]) .intro-disclaimer-section--footer {
     background: var(--insights-bg);
   }
   @media (min-width: 960px) {
