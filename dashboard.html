@@ -1095,7 +1095,7 @@
     margin: 0;
   }
   .theme-cluster {
-    /* Zelfde vlak als .highlight-list in insights */
+    /* Night: --surface2; day: zelfde wit als nieuwskaarten (.card) */
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -1103,6 +1103,9 @@
     margin-bottom: 10px;
     max-width: 48rem;
     box-shadow: var(--shadow-sm);
+  }
+  html[data-theme="light"] .theme-cluster {
+    background: var(--surface);
   }
   .theme-cluster[data-theme="dcm"] { border-left: 3px solid var(--theme-cat-dcm); }
   .theme-cluster[data-theme="conduction"] { border-left: 3px solid var(--theme-cat-conduction); }
@@ -2327,5 +2330,6 @@ buildTrialFilters();
 renderTrials();
 renderNews();
 </script>
+<!-- build:2026-04-04T1630Z -->
 </body>
 </html>

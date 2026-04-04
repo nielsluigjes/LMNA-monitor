@@ -6,9 +6,10 @@ geen abstracts of nieuwssamenvattingen in de embed).
 Run after scraper.py: python3 generate_dashboard.py
 """
 
+import os
 import sqlite3
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from insight_engine import enrich_all
@@ -1153,7 +1154,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin: 0;
   }
   .theme-cluster {
-    /* Zelfde vlak als .highlight-list in insights */
+    /* Night: --surface2; day: zelfde wit als nieuwskaarten (.card) */
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -1161,6 +1162,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin-bottom: 10px;
     max-width: 48rem;
     box-shadow: var(--shadow-sm);
+  }
+  html[data-theme="light"] .theme-cluster {
+    background: var(--surface);
   }
   .theme-cluster[data-theme="dcm"] { border-left: 3px solid var(--theme-cat-dcm); }
   .theme-cluster[data-theme="conduction"] { border-left: 3px solid var(--theme-cat-conduction); }
@@ -2394,6 +2398,14 @@ def _omit_key(records: list[dict], key: str) -> list[dict]:
     return [{k: v for k, v in r.items() if k != key} for r in records]
 
 
+def _build_stamp() -> str:
+    """Korte referentie voor debugging (view source op live vs git-commit)."""
+    sha = os.environ.get("VERCEL_GIT_COMMIT_SHA") or os.environ.get("GITHUB_SHA") or ""
+    if sha:
+        return sha[:10]
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H%MZ")
+
+
 def generate():
     pubs, trials, news, stats = load_data()
     pubs, trials, news, insights = enrich_all(pubs, trials, news)
@@ -2406,6 +2418,7 @@ def generate():
     }
     data_js = json.dumps(payload, ensure_ascii=False, default=str)
     html = HTML_TEMPLATE.replace("__DATA__", data_js)
+    html = html.replace("</body>", f"<!-- build:{_build_stamp()} -->\n</body>")
     OUT_PATH.write_text(html, encoding="utf-8")
     print(f"✅ Dashboard written to: {OUT_PATH}")
     print(f"   {stats['total_pubs']} publications · {stats['total_trials']} trials · {stats['total_news']} news")
