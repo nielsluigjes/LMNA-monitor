@@ -402,6 +402,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     max-width: 100% !important;
     font-variant: normal;
   }
+  html[data-theme="light"] .intro-disclaimer-section:not(.intro-disclaimer-section--footer) > .intro-disclaimer {
+    color: var(--accent);
+  }
+  html:not([data-theme="light"]) .intro-disclaimer-section:not(.intro-disclaimer-section--footer) > .intro-disclaimer {
+    color: var(--bg);
+  }
   .intro-disclaimer-section--footer {
     flex-direction: column;
     gap: 14px;
@@ -410,11 +416,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     border-bottom: none;
     padding-top: 40px;
     padding-bottom: 40px;
+    /* Zelfde vlak als .dashboard-split__main / #main-content */
+    background: var(--surface);
   }
   .intro-disclaimer-section--footer > .intro-disclaimer {
     text-transform: none !important;
     letter-spacing: 0 !important;
     font-variant: normal;
+    color: var(--prose);
   }
   .intro-disclaimer-section--footer > .intro-disclaimer.intro-disclaimer--medical {
     font-weight: 700 !important;
@@ -422,6 +431,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     letter-spacing: 0.04em !important;
     font-size: var(--text-2xs) !important;
     line-height: 1.45 !important;
+    color: var(--accent);
   }
   .intro-disclaimer-section--footer .intro-disclaimer a {
     color: inherit;
@@ -941,8 +951,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin-bottom: 0;
   }
   .filter-section--search {
-    /* Donkerder dan --bg: 10% zwart voor subtiele diepte */
-    background: color-mix(in srgb, var(--bg) 90%, #000 10%);
+    /* Donkerder dan --bg: lichte zwart-mix voor subtiele diepte (minder zwart = dichter bij --bg) */
+    background: color-mix(in srgb, var(--bg) 95%, #000 5%);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 16px 18px 18px;
@@ -1137,7 +1147,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin: 0;
   }
   .theme-cluster {
-    background: var(--surface);
+    /* Zelfde vlak als .highlight-list in insights */
+    background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 14px 16px;
@@ -1183,20 +1194,20 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .theme-cluster[data-theme="imaging"] .theme-cluster-title-btn { color: var(--theme-cat-imaging); }
   .theme-cluster-blurb {
     font-size: var(--text-micro);
-    color: var(--muted);
+    color: var(--prose);
     line-height: 1.45;
     margin: 0 0 8px;
   }
   .theme-cluster .count {
     font-family: 'DM Mono', 'Courier New', Courier, monospace;
     font-size: var(--text-micro);
-    color: var(--muted);
+    color: color-mix(in srgb, var(--prose) 88%, var(--muted) 12%);
     margin-bottom: 8px;
   }
   .theme-cluster ul {
     margin: 0;
     padding-left: 1.15rem;
-    color: var(--prose-dim);
+    color: var(--prose);
     font-size: var(--text-2xs);
     line-height: 1.6;
   }
@@ -1226,7 +1237,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   .highlight-list__lead {
     font-size: var(--text-micro);
-    color: var(--muted);
+    color: color-mix(in srgb, var(--prose) 92%, var(--muted) 8%);
     line-height: 1.45;
     margin: 0 0 10px;
   }
@@ -1245,14 +1256,30 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   .highlight-list a.insight-link,
   .theme-cluster ul a.insight-link {
-    color: inherit;
+    color: var(--text);
     text-decoration: none;
-    border-bottom: 1px solid var(--link-muted-underline);
+    border-bottom: 1px solid color-mix(in srgb, var(--accent2) 42%, transparent);
   }
   .highlight-list a.insight-link:hover,
   .theme-cluster ul a.insight-link:hover {
     color: var(--accent2);
     border-bottom-color: var(--accent2);
+  }
+  /* Night: thema-koppen iets lichter voor contrast op --surface2 */
+  html:not([data-theme="light"]) .theme-cluster[data-theme="dcm"] .theme-cluster-title-btn {
+    color: color-mix(in srgb, var(--theme-cat-dcm) 76%, #fff 24%);
+  }
+  html:not([data-theme="light"]) .theme-cluster[data-theme="conduction"] .theme-cluster-title-btn {
+    color: color-mix(in srgb, var(--theme-cat-conduction) 76%, #fff 24%);
+  }
+  html:not([data-theme="light"]) .theme-cluster[data-theme="lmna"] .theme-cluster-title-btn {
+    color: color-mix(in srgb, var(--theme-cat-lmna) 76%, #fff 24%);
+  }
+  html:not([data-theme="light"]) .theme-cluster[data-theme="therapy"] .theme-cluster-title-btn {
+    color: color-mix(in srgb, var(--theme-cat-therapy) 76%, #fff 24%);
+  }
+  html:not([data-theme="light"]) .theme-cluster[data-theme="imaging"] .theme-cluster-title-btn {
+    color: color-mix(in srgb, var(--theme-cat-imaging) 76%, #fff 24%);
   }
 
   .sort-row {
@@ -1440,6 +1467,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     min-width: 0;
     /* Zelfde vlak als .card (o.a. card-meta staat op dit oppervlak) */
     background: var(--surface);
+  }
+  /* Night: zelfde tint als .insights (insights-bg); light blijft effen --surface */
+  html:not([data-theme="light"]) .dashboard-split__main {
+    background: var(--insights-bg);
+  }
+  html:not([data-theme="light"]) .intro-disclaimer-section--footer {
+    background: var(--insights-bg);
   }
   @media (min-width: 960px) {
     .intro-lead-align {
