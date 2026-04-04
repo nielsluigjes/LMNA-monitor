@@ -64,6 +64,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <meta name="robots" content="noindex, nofollow">
 <script>(function(){var k="lmna-theme",r=document.documentElement,s=localStorage.getItem(k),l=window.matchMedia&&matchMedia("(prefers-color-scheme: light)").matches;if(s==="light"||(s!=="dark"&&l))r.setAttribute("data-theme","light");})();</script>
 <title>LMNA-Monitor: overzicht</title>
+<!-- Preload: zelfde origin + crossorigin zodat ze niet dubbel worden gemist t.o.v. @font-face (geen system-ui/sans-serif → Roboto) -->
+<link rel="preload" href="/fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/plus-jakarta-sans-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/fonts/fonts.css">
 <style>
   :root {
@@ -180,7 +184,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   body {
     background-color: var(--outer-bg);
     color: var(--text);
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Noto Sans', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial;
     font-size: 1rem;
     font-weight: 400;
     line-height: var(--leading-body);
