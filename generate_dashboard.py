@@ -79,26 +79,43 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     --surface2: #181c1a;
     --surface-elevated: #1e2320;
     --border: rgba(255,255,255,0.08);
+    /* Primair: merk / positief / recruiting; secundair: info / actieve trial; tertiair: aandacht */
     --accent: #9fe88a;
     --accent2: #6dd4ff;
     --accent3: #f0c14d;
     --danger: #ff6b6b;
-    --text: #eef2ee;
-    --muted: #8a938b;
-    --recruiting: #9fe88a;
+    --text: #f1f5f2;
+    --muted: #9ca69d;
+    --recruiting: var(--accent);
     --completed: #7a847c;
-    --active: #6dd4ff;
-    --prose: #c4cbc5;
-    --prose-dim: #9aa39b;
-    --intro-grad: linear-gradient(165deg, rgba(30,35,32,0.55) 0%, transparent 55%);
-    --insights-bg: rgba(16, 20, 18, 0.5);
-    --chip-accent-bg: rgba(159, 232, 138, 0.12);
-    --chip-accent-border: rgba(159, 232, 138, 0.22);
-    --filter-chip-hover-bg: rgba(159, 232, 138, 0.1);
-    --summary-hover-bg: rgba(109, 212, 255, 0.08);
-    --tabs-bar-bg: rgba(8, 10, 9, 0.72);
+    --active: var(--accent2);
+    --prose: #d0d7d0;
+    --prose-dim: #aeb6af;
+    --intro-grad: linear-gradient(165deg, color-mix(in srgb, var(--surface-elevated) 52%, transparent) 0%, transparent 55%);
+    --insights-bg: color-mix(in srgb, var(--surface) 50%, transparent);
+    --chip-accent-bg: color-mix(in srgb, var(--accent) 14%, transparent);
+    --chip-accent-border: color-mix(in srgb, var(--accent) 24%, transparent);
+    --filter-chip-hover-bg: color-mix(in srgb, var(--accent) 10%, transparent);
+    --summary-hover-bg: color-mix(in srgb, var(--accent2) 10%, transparent);
+    --tabs-bar-bg: color-mix(in srgb, var(--bg) 78%, transparent);
+    --link-muted-underline: color-mix(in srgb, var(--accent2) 34%, transparent);
+    --theme-chip-border: color-mix(in srgb, var(--accent2) 38%, var(--border));
+    --logo-glow: color-mix(in srgb, var(--accent) 18%, transparent);
+    --band-text: #f4f8f5;
     /* Zelfde als .dashboard-split op brede schermen: intro uitlijnen met hoofdkolom */
     --dashboard-grid-cols: minmax(0, 1fr) minmax(280px, 400px);
+    --site-max-width: 1200px;
+    /* Zelfde als .intro-disclaimer-section (topbanner + footer) */
+    --band-accent-bg: color-mix(in srgb, var(--accent) 75%, var(--bg));
+    /* Night: zelfde basis als .site-shell (o.a. header); day: --band-accent-bg */
+    --outer-bg: var(--bg);
+    --text-base: clamp(18px, 0.24vw + 17.25px, 19px);
+    --text-sm: 17px;
+    --text-xs: 16px;
+    --text-2xs: 15px;
+    --text-micro: 14px;
+    --leading-body: 1.625;
+    --leading-snug: 1.35;
   }
   html[data-theme="light"] {
     color-scheme: light;
@@ -114,41 +131,111 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     --accent2: #0a6f9e;
     --accent3: #8a5f00;
     --danger: #b42318;
-    --text: #0f1711;
-    --muted: #5c665e;
-    --recruiting: #1d6b32;
+    --text: #0c140e;
+    --muted: #485248;
     --completed: #5c665e;
-    --active: #0a6f9e;
-    --prose: #3a443c;
-    --prose-dim: #5a635c;
-    --intro-grad: linear-gradient(165deg, rgba(255,255,255,0.92) 0%, transparent 50%);
-    --insights-bg: rgba(255, 255, 255, 0.72);
-    --chip-accent-bg: rgba(29, 107, 50, 0.1);
-    --chip-accent-border: rgba(29, 107, 50, 0.2);
-    --filter-chip-hover-bg: rgba(29, 107, 50, 0.08);
-    --summary-hover-bg: rgba(10, 111, 158, 0.08);
-    --tabs-bar-bg: rgba(244, 247, 244, 0.82);
+    --prose: #2e382f;
+    --prose-dim: #4d5650;
+    --intro-grad: linear-gradient(165deg, color-mix(in srgb, var(--surface) 92%, transparent) 0%, transparent 50%);
+    --insights-bg: color-mix(in srgb, var(--surface) 72%, transparent);
+    --tabs-bar-bg: color-mix(in srgb, var(--bg) 82%, transparent);
+    --outer-bg: var(--band-accent-bg);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html {
+    font-size: var(--text-base);
+    scroll-behavior: smooth;
+    scroll-padding-top: 1rem;
+    background-color: var(--outer-bg);
+    min-height: 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    .card,
+    .stat,
+    .trial-card,
+    .tab,
+    .theme-toggle,
+    .filter-btn,
+    .chip,
+    .intro-details > summary,
+    .abstract {
+      transition-duration: 0.001ms !important;
+    }
+  }
   body {
-    background-color: var(--bg);
-    background-image:
-      radial-gradient(ellipse 100% 70% at 0% -10%, rgba(159, 232, 138, 0.09), transparent 52%),
-      radial-gradient(ellipse 90% 55% at 100% 0%, rgba(109, 212, 255, 0.07), transparent 48%),
-      radial-gradient(ellipse 70% 45% at 50% 110%, rgba(240, 193, 77, 0.05), transparent 55%);
+    background-color: var(--outer-bg);
     color: var(--text);
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    font-size: 15px;
+    font-size: 1rem;
     font-weight: 400;
-    line-height: 1.6;
+    line-height: var(--leading-body);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  html[data-theme="light"] body {
+  .skip-link {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .skip-link:focus,
+  .skip-link:focus-visible {
+    position: fixed;
+    left: 16px;
+    top: 16px;
+    z-index: 10001;
+    width: auto;
+    height: auto;
+    margin: 0;
+    clip: auto;
+    overflow: visible;
+    white-space: normal;
+    padding: 10px 18px;
+    background: var(--surface);
+    color: var(--accent2);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: var(--text-micro);
+    font-weight: 600;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+  }
+  button:focus:not(:focus-visible),
+  a:focus:not(:focus-visible) {
+    outline: none;
+  }
+  button:focus-visible,
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--accent2);
+    outline-offset: 2px;
+  }
+  .site-shell {
+    max-width: var(--site-max-width);
+    margin-inline: auto;
+    width: 100%;
+    min-height: 100vh;
+    background-color: var(--bg);
     background-image:
-      radial-gradient(ellipse 100% 70% at 0% -10%, rgba(29, 107, 50, 0.06), transparent 52%),
-      radial-gradient(ellipse 90% 55% at 100% 0%, rgba(10, 111, 158, 0.05), transparent 48%);
+      radial-gradient(ellipse 100% 70% at 0% -10%, color-mix(in srgb, var(--accent) 9%, transparent), transparent 52%),
+      radial-gradient(ellipse 90% 55% at 100% 0%, color-mix(in srgb, var(--accent2) 7%, transparent), transparent 48%),
+      radial-gradient(ellipse 70% 45% at 50% 110%, color-mix(in srgb, var(--accent3) 5%, transparent), transparent 55%);
+  }
+  html[data-theme="light"] .site-shell {
+    background-image:
+      radial-gradient(ellipse 100% 70% at 0% -10%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 52%),
+      radial-gradient(ellipse 90% 55% at 100% 0%, color-mix(in srgb, var(--accent2) 5%, transparent), transparent 48%),
+      radial-gradient(ellipse 70% 45% at 50% 110%, color-mix(in srgb, var(--accent3) 4%, transparent), transparent 55%);
   }
 
   /* HEADER */
@@ -172,7 +259,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     color: var(--accent);
     letter-spacing: -0.03em;
     line-height: 1.02;
-    text-shadow: 0 0 48px rgba(159, 232, 138, 0.15);
+    text-shadow: 0 0 48px var(--logo-glow);
   }
   html[data-theme="light"] .logo-block h1 {
     text-shadow: none;
@@ -180,7 +267,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .logo-block p {
     color: var(--accent);
     margin-top: 10px;
-    font-size: 14px;
+    font-size: var(--text-xs);
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-weight: 400;
     letter-spacing: 0.01em;
@@ -190,7 +277,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   .last-updated {
     color: var(--muted);
-    font-size: 11px;
+    font-size: var(--text-micro);
     text-align: right;
     font-family: 'DM Mono', monospace;
     margin-top: 14px;
@@ -199,7 +286,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .last-updated span {
     display: block;
     color: var(--accent);
-    font-size: 12px;
+    font-size: var(--text-micro);
     margin-top: 2px;
   }
   .theme-toggle {
@@ -261,7 +348,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .intro p {
     color: var(--prose);
     margin-bottom: 12px;
-    font-size: 14px;
+    font-size: var(--text-xs);
   }
   .intro-disclaimer-section {
     display: flex;
@@ -269,19 +356,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     justify-content: center;
     padding: 12px 48px;
     border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
-    background: color-mix(in srgb, var(--accent) 75%, var(--bg));
+    background: var(--band-accent-bg);
     text-align: center;
     box-sizing: border-box;
   }
   .intro-disclaimer-section .intro-disclaimer {
     flex: 0 1 auto;
     width: 100%;
-    font-size: 14px;
+    font-size: var(--text-xs);
     font-weight: 500;
     line-height: 1.55;
     letter-spacing: 0;
     text-transform: none;
-    color: #fff;
+    color: var(--band-text);
     max-width: 56rem;
     margin: 0;
     padding: 0;
@@ -292,7 +379,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     text-transform: uppercase !important;
     letter-spacing: 0.04em !important;
     font-weight: 700 !important;
-    font-size: 13px !important;
+    font-size: var(--text-2xs) !important;
     line-height: 1.45 !important;
     max-width: 100% !important;
     font-variant: normal;
@@ -315,7 +402,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     font-weight: 700 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.04em !important;
-    font-size: 13px !important;
+    font-size: var(--text-2xs) !important;
     line-height: 1.45 !important;
   }
   .intro-disclaimer-section--footer .intro-disclaimer a {
@@ -325,8 +412,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .intro-lead {
     margin-bottom: 0;
     color: var(--prose);
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: var(--text-xs);
+    line-height: 1.55;
   }
   .intro-details {
     margin-top: 16px;
@@ -335,7 +422,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .intro-details > summary {
     cursor: pointer;
     color: var(--accent2);
-    font-size: 14px;
+    font-size: var(--text-xs);
     font-weight: 600;
     list-style: none;
     padding: 12px 18px 12px 16px;
@@ -387,7 +474,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     line-height: 1.25;
   }
   .intro-detail-text {
-    font-size: 13px;
+    font-size: var(--text-2xs);
     color: var(--muted);
     line-height: 1.55;
     margin: 0 0 12px;
@@ -395,7 +482,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .intro-detail-list {
     margin: 0;
     padding-left: 1.25rem;
-    font-size: 13px;
+    font-size: var(--text-2xs);
     color: var(--prose);
     line-height: 1.55;
   }
@@ -411,7 +498,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin: 0;
   }
   .intro-search-hint dt {
-    font-size: 13px;
+    font-size: var(--text-2xs);
     font-weight: 500;
     color: var(--text);
     margin: 0 0 8px;
@@ -419,7 +506,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   .intro-search-hint dd {
     margin: 0;
-    font-size: 12px;
+    font-size: var(--text-micro);
     color: var(--muted);
     line-height: 1.5;
   }
@@ -431,14 +518,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin-top: 6px;
   }
   .intro-search-terms-label {
-    font-size: 11px;
+    font-size: var(--text-micro);
     color: var(--muted);
     font-family: 'DM Mono', monospace;
     margin-right: 4px;
   }
   .intro-search-term {
     font-family: 'DM Mono', monospace;
-    font-size: 11px;
+    font-size: var(--text-micro);
     color: var(--accent);
     background: var(--chip-accent-bg);
     border: 1px solid var(--chip-accent-border);
@@ -478,8 +565,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .stat-num.green { color: var(--accent); }
   .stat-label {
     color: var(--muted);
-    font-size: 10px;
-    letter-spacing: 0.12em;
+    font-size: var(--text-micro);
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-top: 10px;
     font-family: 'DM Mono', monospace;
@@ -511,7 +598,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     padding: 0 16px;
     cursor: pointer;
     color: var(--muted);
-    font-size: 14px;
+    font-size: var(--text-xs);
     font-weight: 600;
     letter-spacing: 0.02em;
     text-transform: none;
@@ -534,8 +621,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
   /* MAIN CONTENT */
   main { padding: 32px 48px 48px; }
-  .panel { display: none; }
-  .panel.active { display: block; }
+  .panel[hidden] {
+    display: none !important;
+  }
+  .panel:not([hidden]) {
+    display: block;
+  }
 
   /* SEARCH */
   .search-bar {
@@ -550,14 +641,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     padding: 14px 18px;
     color: var(--text);
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 15px;
+    font-size: var(--text-sm);
     outline: none;
     box-shadow: var(--shadow-sm);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
-  .search-bar input:focus {
+  .search-bar input:focus-visible {
     border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
     box-shadow: var(--shadow-md), 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+    outline: none;
   }
   .search-bar input::placeholder { color: var(--muted); }
 
@@ -591,24 +683,45 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     line-height: 1.4;
     flex: 1;
   }
+  .title-link-wrap {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4em;
+    flex-wrap: wrap;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .title-link-wrap > a {
+    min-width: 0;
+  }
+  .ext-link-icon {
+    flex-shrink: 0;
+    color: var(--muted);
+    opacity: 0.72;
+    display: inline-flex;
+    vertical-align: middle;
+  }
+  .ext-link-icon svg {
+    display: block;
+  }
   .card-title a { color: inherit; text-decoration: none; }
   .card-title a:hover { color: var(--accent); }
   .card-date {
     color: var(--muted);
-    font-size: 11px;
+    font-size: var(--text-micro);
     white-space: nowrap;
     flex-shrink: 0;
   }
   .card-meta {
     color: var(--muted);
-    font-size: 12px;
+    font-size: var(--text-micro);
     font-family: 'DM Mono', monospace;
     margin-bottom: 10px;
   }
   .card-meta strong { color: var(--accent2); }
   .abstract {
     color: var(--prose-dim);
-    font-size: 13px;
+    font-size: var(--text-2xs);
     font-family: 'Plus Jakarta Sans', sans-serif;
     line-height: 1.75;
     max-height: 0;
@@ -618,9 +731,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .abstract.open { max-height: 400px; }
   .toggle-abstract {
     color: var(--muted);
-    font-size: 10px;
+    font-size: var(--text-micro);
     cursor: pointer;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     margin-top: 8px;
     display: inline-block;
@@ -630,10 +743,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   /* BADGES */
   .badge {
     display: inline-block;
-    padding: 4px 10px;
+    padding: 5px 11px;
     border-radius: var(--radius-pill);
-    font-size: 10px;
-    letter-spacing: 0.1em;
+    font-size: var(--text-micro);
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     font-weight: 500;
     flex-shrink: 0;
@@ -665,9 +778,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     font-weight: 300;
     line-height: 1.4;
   }
+  .trial-title .title-link-wrap a:hover { color: var(--accent2); }
   .trial-title a { color: inherit; text-decoration: none; }
   .trial-title a:hover { color: var(--accent2); }
-  .trial-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 12px; font-family: 'DM Mono', monospace; color: var(--muted); }
+  .trial-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: var(--text-micro); font-family: 'DM Mono', monospace; color: var(--muted); }
   .trial-meta span strong { color: var(--text); }
 
   /* EMPTY */
@@ -676,7 +790,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     padding: 80px 20px;
     color: var(--muted);
   }
-  .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+  .empty-icon {
+    margin-bottom: 16px;
+    color: var(--muted);
+    display: flex;
+    justify-content: center;
+  }
+  .empty-icon svg {
+    width: 3rem;
+    height: 3rem;
+    opacity: 0.55;
+  }
 
   /* FILTER ROW */
   .filter-row {
@@ -692,7 +816,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     padding: 8px 16px;
     border-radius: var(--radius-pill);
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 12px;
+    font-size: var(--text-micro);
     font-weight: 600;
     letter-spacing: 0.03em;
     text-transform: none;
@@ -708,7 +832,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
 
   /* RESULT COUNT */
-  .result-count { color: var(--muted); font-size: 12px; margin-bottom: 16px; }
+  .result-count { color: var(--muted); font-size: var(--text-micro); margin-bottom: 16px; }
 
   /* QUICK SEARCH CHIPS */
   .chip-row {
@@ -719,7 +843,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin-bottom: 14px;
   }
   .chip-label {
-    font-size: 11px;
+    font-size: var(--text-micro);
     color: var(--muted);
     font-family: 'DM Mono', monospace;
     letter-spacing: 0.06em;
@@ -732,7 +856,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     padding: 8px 14px;
     border-radius: var(--radius-pill);
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 12px;
+    font-size: var(--text-micro);
     font-weight: 600;
     cursor: pointer;
     transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -745,11 +869,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
 
   .panel-hint {
-    font-size: 12px;
+    font-size: var(--text-micro);
     color: var(--muted);
     margin-bottom: 12px;
     max-width: 40rem;
-    line-height: 1.45;
+    line-height: 1.5;
   }
 
   .news-sum-wrap {
@@ -759,7 +883,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .news-sum-wrap summary {
     cursor: pointer;
     color: var(--accent2);
-    font-size: 12px;
+    font-size: var(--text-micro);
     font-weight: 500;
     list-style: none;
     user-select: none;
@@ -767,7 +891,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .news-sum-wrap summary::-webkit-details-marker { display: none; }
   .news-sum-wrap .news-summary {
     color: var(--prose-dim);
-    font-size: 12px;
+    font-size: var(--text-micro);
     line-height: 1.65;
     margin-top: 8px;
   }
@@ -790,14 +914,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     line-height: 1.2;
   }
   .insights-sub {
-    font-size: 12px;
+    font-size: var(--text-micro);
     color: var(--muted);
     line-height: 1.45;
     margin: 0 0 14px;
     max-width: 48rem;
   }
   .insights-method {
-    font-size: 12px;
+    font-size: var(--text-micro);
     color: var(--prose);
     max-width: 48rem;
     line-height: 1.5;
@@ -823,7 +947,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     letter-spacing: -0.01em;
   }
   .insight-block-lead {
-    font-size: 12px;
+    font-size: var(--text-micro);
     color: var(--muted);
     line-height: 1.5;
     margin: 0 0 12px;
@@ -834,7 +958,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   .insight-para {
     color: var(--prose);
-    font-size: 13px;
+    font-size: var(--text-2xs);
     max-width: 48rem;
     line-height: 1.55;
     margin: 0;
@@ -856,14 +980,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin-bottom: 4px;
   }
   .theme-cluster-blurb {
-    font-size: 12px;
+    font-size: var(--text-micro);
     color: var(--muted);
     line-height: 1.45;
     margin: 0 0 8px;
   }
   .theme-cluster .count {
     font-family: 'DM Mono', monospace;
-    font-size: 11px;
+    font-size: var(--text-micro);
     color: var(--muted);
     margin-bottom: 8px;
   }
@@ -871,7 +995,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin: 0;
     padding-left: 1.15rem;
     color: var(--prose-dim);
-    font-size: 13px;
+    font-size: var(--text-2xs);
     line-height: 1.6;
   }
   .theme-cluster ul li {
@@ -899,7 +1023,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     line-height: 1.25;
   }
   .highlight-list__lead {
-    font-size: 12px;
+    font-size: var(--text-micro);
     color: var(--muted);
     line-height: 1.45;
     margin: 0 0 10px;
@@ -908,7 +1032,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     margin: 0;
     padding-left: 1.2rem;
     color: var(--prose);
-    font-size: 13px;
+    font-size: var(--text-2xs);
     line-height: 1.65;
   }
   .highlight-list ol li {
@@ -921,7 +1045,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .theme-cluster ul a.insight-link {
     color: inherit;
     text-decoration: none;
-    border-bottom: 1px solid rgba(91, 196, 245, 0.3);
+    border-bottom: 1px solid var(--link-muted-underline);
   }
   .highlight-list a.insight-link:hover,
   .theme-cluster ul a.insight-link:hover {
@@ -937,7 +1061,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     flex-wrap: wrap;
   }
   .card-reader-note {
-    font-size: 12px;
+    font-size: var(--text-micro);
     color: var(--muted);
     line-height: 1.55;
     margin: 0 0 12px;
@@ -950,10 +1074,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   }
   .theme-chip {
     display: inline-block;
-    font-size: 10px;
+    font-size: var(--text-micro);
     color: var(--accent2);
-    border: 1px solid rgba(91,196,245,0.35);
-    padding: 2px 8px;
+    border: 1px solid var(--theme-chip-border);
+    padding: 3px 9px;
     border-radius: 999px;
     margin-right: 4px;
     margin-top: 4px;
@@ -1034,8 +1158,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       padding: 40px 20px;
     }
     .intro { padding: 22px 20px; }
+    .dashboard-split {
+      display: flex;
+      flex-direction: column;
+    }
+    .dashboard-split__main {
+      order: 1;
+    }
     .insights {
-      display: none;
+      order: 2;
+      border-top: 1px solid var(--border);
+      padding: 24px 20px 28px;
+    }
+    .card-title,
+    .trial-title {
+      font-weight: 500;
     }
     .stats-bar {
       grid-template-columns: repeat(2, 1fr);
@@ -1049,12 +1186,14 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main-content">Ga naar inhoud</a>
 
+<div class="site-shell">
 <header>
   <div class="logo-block">
     <div class="logo-heading">
       <h1>LMNA-Monitor</h1>
-      <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Schakel naar licht thema">
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="true" aria-label="Schakel naar licht thema">
         <span class="theme-toggle__icon theme-toggle__sun" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg></span>
         <span class="theme-toggle__icon theme-toggle__moon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
       </button>
@@ -1137,7 +1276,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   </div>
 </div>
 <div class="dashboard-split">
-<section class="insights" aria-labelledby="insights-heading">
+<section class="insights" id="insights" aria-labelledby="insights-heading">
   <h2 id="insights-heading">Waar begin je?</h2>
   <p class="insights-sub">Korte oriëntatie in gewone taal; geen medisch advies. Links in de tabs vind je het nieuws, de publicaties en de studies.</p>
   <p class="insights-method" id="insights-method"></p>
@@ -1145,21 +1284,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </section>
 
 <div class="dashboard-split__main">
-<div class="tabs">
-  <button class="tab active" onclick="switchTab('news', this)">Nieuws</button>
-  <button class="tab" onclick="switchTab('publications', this)">Publicaties</button>
-  <button class="tab" onclick="switchTab('trials', this)">Studies</button>
+<div class="tabs" role="tablist" aria-label="Nieuws, publicaties en studies">
+  <button type="button" class="tab active" role="tab" id="tab-news" data-tab="news" aria-selected="true" aria-controls="panel-news" tabindex="0" onclick="switchTab('news', this)">Nieuws</button>
+  <button type="button" class="tab" role="tab" id="tab-publications" data-tab="publications" aria-selected="false" aria-controls="panel-publications" tabindex="-1" onclick="switchTab('publications', this)">Publicaties</button>
+  <button type="button" class="tab" role="tab" id="tab-trials" data-tab="trials" aria-selected="false" aria-controls="panel-trials" tabindex="-1" onclick="switchTab('trials', this)">Studies</button>
 </div>
 
-<main>
+<main id="main-content" tabindex="-1">
 
 <!-- NEWS -->
-<div id="panel-news" class="panel active">
+<div id="panel-news" class="panel" role="tabpanel" aria-labelledby="tab-news">
   <p class="panel-hint">Bronnen: officiële RSS-feeds (o.a. PubMed-zoekalerts, ClinicalTrials.gov, Circulation, open access). Geen commercieel nieuwsaggregaat.</p>
   <div class="sort-row" aria-label="Sorteer nieuws">
     <span class="chip-label">Sorteer</span>
-    <button type="button" class="filter-btn active" onclick="setNewsSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
-    <button type="button" class="filter-btn" onclick="setNewsSort('date', this)">Recent</button>
+    <button type="button" class="filter-btn active" aria-pressed="true" onclick="setNewsSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
+    <button type="button" class="filter-btn" aria-pressed="false" onclick="setNewsSort('date', this)">Recent</button>
   </div>
   <div class="chip-row" aria-label="Snelfilter nieuws">
     <span class="chip-label">Snelfilter</span>
@@ -1177,11 +1316,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </div>
 
 <!-- PUBLICATIONS -->
-<div id="panel-publications" class="panel">
+<div id="panel-publications" class="panel" role="tabpanel" aria-labelledby="tab-publications" hidden>
   <div class="sort-row" aria-label="Sorteer publicaties">
     <span class="chip-label">Sorteer</span>
-    <button type="button" class="filter-btn active" onclick="setPubSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
-    <button type="button" class="filter-btn" onclick="setPubSort('date', this)">Recent</button>
+    <button type="button" class="filter-btn active" aria-pressed="true" onclick="setPubSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
+    <button type="button" class="filter-btn" aria-pressed="false" onclick="setPubSort('date', this)">Recent</button>
   </div>
   <div class="chip-row" aria-label="Snelfilter publicaties">
     <span class="chip-label">Snelfilter</span>
@@ -1201,12 +1340,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </div>
 
 <!-- TRIALS -->
-<div id="panel-trials" class="panel">
+<div id="panel-trials" class="panel" role="tabpanel" aria-labelledby="tab-trials" hidden>
   <p class="panel-hint">Een studie met status <strong>RECRUITING</strong> zoekt op dit moment deelnemers. Dat is géén aanbeveling om mee te doen; bespreek het met je arts en meld je alleen via de officiële studiepagina.</p>
   <div class="sort-row" aria-label="Sorteer studies">
     <span class="chip-label">Sorteer</span>
-    <button type="button" class="filter-btn active" onclick="setTrialSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
-    <button type="button" class="filter-btn" onclick="setTrialSort('date', this)">Startdatum</button>
+    <button type="button" class="filter-btn active" aria-pressed="true" onclick="setTrialSort('relevance', this)" title="Items die het beste aansluiten op LMNA en het hart eerst">Best passend eerst</button>
+    <button type="button" class="filter-btn" aria-pressed="false" onclick="setTrialSort('date', this)">Startdatum</button>
   </div>
   <div class="chip-row" aria-label="Snelfilter studies">
     <span class="chip-label">Snelfilter</span>
@@ -1234,6 +1373,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <p class="intro-disclaimer intro-disclaimer--medical">Dit is geen medisch advies. Raadpleeg altijd een arts voor persoonlijke medische vragen.</p>
   <p class="intro-disclaimer">Vragen of verwijderverzoeken: <a href="mailto:lmna.monitor@gmail.com">lmna.monitor@gmail.com</a></p>
 </section>
+</div>
 
 <script>
 (function initThemeToggle() {
@@ -1249,7 +1389,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   function syncButton() {
     if (!btn) return;
     const light = effectiveMode() === "light";
-    btn.setAttribute("aria-pressed", light ? "true" : "false");
+    btn.setAttribute("aria-pressed", light ? "false" : "true");
     var label = light ? "Schakel naar donker thema" : "Schakel naar licht thema";
     btn.setAttribute("aria-label", label);
     btn.title = label;
@@ -1290,6 +1430,12 @@ function escAttr(s) {
     .replace(/"/g, "&quot;")
     .replace(/</g, "&lt;");
 }
+
+var EXT_LINK_ICON =
+  '<span class="ext-link-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>';
+
+var EMPTY_STATE_ICON =
+  '<div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>';
 
 /** Korte NL-regel voor patiënten/lezers (uit data). */
 function readerNotePara(note) {
@@ -1402,11 +1548,37 @@ renderInsights();
 
 // ── Tabs ──────────────────────────────────────────────────────────────────
 function switchTab(name, btn) {
-  document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  document.getElementById("panel-" + name).classList.add("active");
-  btn.classList.add("active");
+  document.querySelectorAll(".panel").forEach(function (p) {
+    p.hidden = p.id !== "panel-" + name;
+  });
+  document.querySelectorAll(".tab").forEach(function (t) {
+    var selected = t === btn;
+    t.classList.toggle("active", selected);
+    t.setAttribute("aria-selected", selected ? "true" : "false");
+    t.setAttribute("tabindex", selected ? "0" : "-1");
+  });
 }
+
+(function initTabKeyboard() {
+  var tablist = document.querySelector('[role="tablist"]');
+  if (!tablist) return;
+  tablist.addEventListener("keydown", function (e) {
+    var tabs = Array.prototype.slice.call(tablist.querySelectorAll('[role="tab"]'));
+    var i = tabs.indexOf(document.activeElement);
+    if (i < 0) return;
+    var next = i;
+    if (e.key === "ArrowRight") next = (i + 1) % tabs.length;
+    else if (e.key === "ArrowLeft") next = (i - 1 + tabs.length) % tabs.length;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = tabs.length - 1;
+    else return;
+    e.preventDefault();
+    var tabBtn = tabs[next];
+    var tabName = tabBtn.getAttribute("data-tab");
+    if (tabName) switchTab(tabName, tabBtn);
+    tabBtn.focus();
+  });
+})();
 
 function quickNews(q) {
   document.getElementById("search-news").value = q;
@@ -1451,8 +1623,14 @@ let pubSort = "relevance";
 function setPubSort(mode, btn) {
   pubSort = mode;
   const row = btn.closest(".sort-row");
-  if (row) row.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  if (row) {
+    row.querySelectorAll(".filter-btn").forEach(function (b) {
+      b.classList.remove("active");
+      b.setAttribute("aria-pressed", "false");
+    });
+  }
   btn.classList.add("active");
+  btn.setAttribute("aria-pressed", "true");
   renderPubs();
 }
 
@@ -1486,7 +1664,10 @@ function renderPubs() {
     `${sorted.length} / ${DATA.publications.length} publicaties`;
   const el = document.getElementById("pubs-list");
   if (!sorted.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🔬</div>Geen resultaten; pas zoek of filters aan.</div>';
+    el.innerHTML =
+      '<div class="empty">' +
+      EMPTY_STATE_ICON +
+      "Geen resultaten; pas zoek of filters aan.</div>";
     return;
   }
   el.innerHTML = sorted.map(p => {
@@ -1496,12 +1677,12 @@ function renderPubs() {
     <div class="card">
       ${badges}
       <div class="card-header">
-        <div class="card-title"><a href="${p.url}" target="_blank" rel="noopener">${p.title || "-"}</a></div>
-        <div class="card-date">${p.pub_date || ""}</div>
+        <div class="card-title"><span class="title-link-wrap"><a href="${escAttr(p.url)}" target="_blank" rel="noopener">${escHtml(p.title || "-")}</a>${EXT_LINK_ICON}</span></div>
+        <div class="card-date">${escHtml(p.pub_date || "")}</div>
       </div>
       ${note}
       <div class="card-meta">
-        <strong>${p.journal || "-"}</strong>${p.authors ? " · " + p.authors : ""}
+        <strong>${escHtml(p.journal || "-")}</strong>${p.authors ? " · " + escHtml(p.authors) : ""}
       </div>
     </div>
   `;
@@ -1516,8 +1697,14 @@ let trialSort = "relevance";
 function setTrialSort(mode, btn) {
   trialSort = mode;
   const row = btn.closest(".sort-row");
-  if (row) row.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  if (row) {
+    row.querySelectorAll(".filter-btn").forEach(function (b) {
+      b.classList.remove("active");
+      b.setAttribute("aria-pressed", "false");
+    });
+  }
   btn.classList.add("active");
+  btn.setAttribute("aria-pressed", "true");
   renderTrials();
 }
 
@@ -1591,7 +1778,10 @@ function renderTrials() {
     `${sorted.length} / ${DATA.trials.length} studies`;
   const el = document.getElementById("trials-list");
   if (!sorted.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🧪</div>Geen studies; pas filter of zoekterm.</div>';
+    el.innerHTML =
+      '<div class="empty">' +
+      EMPTY_STATE_ICON +
+      "Geen studies; pas filter of zoekterm.</div>";
     return;
   }
   el.innerHTML = sorted.map(t => {
@@ -1601,17 +1791,17 @@ function renderTrials() {
     <div class="trial-card">
       ${tBadges}
       <div class="trial-header">
-        <div class="trial-title"><a href="${t.url}" target="_blank" rel="noopener">${t.title || "-"}</a></div>
-        <span class="badge ${badgeClass(t.status)}">${(t.status || "-").replace(/_/g," ")}</span>
+        <div class="trial-title"><span class="title-link-wrap"><a href="${escAttr(t.url)}" target="_blank" rel="noopener">${escHtml(t.title || "-")}</a>${EXT_LINK_ICON}</span></div>
+        <span class="badge ${badgeClass(t.status)}">${escHtml((t.status || "-").replace(/_/g," "))}</span>
       </div>
       ${tNote}
       <div class="trial-meta">
-        <span><strong>${t.nct_id}</strong></span>
-        ${t.phase ? `<span>Fase: <strong>${t.phase}</strong></span>` : ""}
-        ${t.start_date ? `<span>Start: <strong>${t.start_date}</strong></span>` : ""}
-        ${t.primary_end ? `<span>Einde: <strong>${t.primary_end}</strong></span>` : ""}
-        ${t.locations ? `<span>📍 ${t.locations}</span>` : ""}
-        ${t.interventions ? `<span>💊 ${t.interventions}</span>` : ""}
+        <span><strong>${escHtml(t.nct_id)}</strong></span>
+        ${t.phase ? `<span>Fase: <strong>${escHtml(t.phase)}</strong></span>` : ""}
+        ${t.start_date ? `<span>Start: <strong>${escHtml(t.start_date)}</strong></span>` : ""}
+        ${t.primary_end ? `<span>Einde: <strong>${escHtml(t.primary_end)}</strong></span>` : ""}
+        ${t.locations ? `<span>Locatie: <strong>${escHtml(t.locations)}</strong></span>` : ""}
+        ${t.interventions ? `<span>Interventie: <strong>${escHtml(t.interventions)}</strong></span>` : ""}
       </div>
     </div>
   `;
@@ -1625,8 +1815,14 @@ let newsSort = "relevance";
 function setNewsSort(mode, btn) {
   newsSort = mode;
   const row = btn.closest(".sort-row");
-  if (row) row.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+  if (row) {
+    row.querySelectorAll(".filter-btn").forEach(function (b) {
+      b.classList.remove("active");
+      b.setAttribute("aria-pressed", "false");
+    });
+  }
   btn.classList.add("active");
+  btn.setAttribute("aria-pressed", "true");
   renderNews();
 }
 
@@ -1666,21 +1862,25 @@ function renderNews() {
     `${sorted.length} / ${DATA.news.length} nieuws`;
   const el = document.getElementById("news-list");
   if (!sorted.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">📰</div>Geen nieuws; pas je zoekterm aan.</div>';
+    el.innerHTML =
+      '<div class="empty">' +
+      EMPTY_STATE_ICON +
+      "Geen nieuws; pas je zoekterm aan.</div>";
     return;
   }
   el.innerHTML = sorted.map(n => {
     const nBadges = themeBadgesOnly(n.theme_labels);
     const nNote = readerNotePara(n.reader_note_nl);
+    const nd = formatNlNewsDate(n.pub_date || n.fetched_at);
     return `
     <div class="card">
       ${nBadges}
       <div class="card-header">
-        <div class="card-title"><a href="${n.url}" target="_blank" rel="noopener">${n.title || "-"}</a></div>
-        <div class="card-date">${formatNlNewsDate(n.pub_date || n.fetched_at)}</div>
+        <div class="card-title"><span class="title-link-wrap"><a href="${escAttr(n.url)}" target="_blank" rel="noopener">${escHtml(n.title || "-")}</a>${EXT_LINK_ICON}</span></div>
+        <div class="card-date">${escHtml(nd)}</div>
       </div>
       ${nNote}
-      <div class="card-meta"><strong>${n.source || "-"}</strong></div>
+      <div class="card-meta"><strong>${escHtml(n.source || "-")}</strong></div>
     </div>
   `;
   }).join("");
