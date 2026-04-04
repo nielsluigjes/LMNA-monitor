@@ -14,9 +14,9 @@ Scrapet automatisch PubMed, ClinicalTrials.gov en een **nieuws-/feedtab** met ui
 1. Ga naar [vercel.com](https://vercel.com) → **Add New…** → **Project** → importeer deze GitHub-repo.
 2. **Framework Preset:** Other  
 3. **Root Directory:** `./` (standaard)  
-4. **Build Command:** leeg laten  
-5. **Install Command:** leeg laten  
-6. **Output Directory:** leeg laten (of `.`; de site staat al als `dashboard.html` in de repo)  
+4. **Build Command:** leeg laten — `vercel.json` voert `python3 generate_dashboard.py` uit zodat de live site altijd overeenkomt met `generate_dashboard.py` + `lmna.db` in die commit (niet met een eventueel verouderde gecommit `dashboard.html`).  
+5. **Install Command:** leeg laten — `vercel.json` gebruikt `python3 -m pip install -r requirements.txt`.  
+6. **Output Directory:** leeg laten (of `.`)  
 7. Deploy. Daarna: elke push naar `main` (o.a. de dagelijkse bot-commit) triggert automatisch een nieuwe productie-deploy.
 
 Commits met `[skip ci]` slaan alleen GitHub Actions over; Vercel blijft deployen via de gewone GitHub-webhook.
