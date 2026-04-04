@@ -127,6 +127,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     --text-micro: 14px;
     --leading-body: 1.625;
     --leading-snug: 1.35;
+    /* Geen generieke sans-serif in de stack: op Android/Chrome wordt die vrijwel altijd Roboto */
+    --font-sans: 'Plus Jakarta Sans', 'Noto Sans', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial;
   }
   html[data-theme="light"] {
     color-scheme: light;
@@ -184,7 +186,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   body {
     background-color: var(--outer-bg);
     color: var(--text);
-    font-family: 'Plus Jakarta Sans', 'Noto Sans', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial;
+    font-family: var(--font-sans);
     font-size: 1rem;
     font-weight: 400;
     line-height: var(--leading-body);
@@ -218,7 +220,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     padding: 10px 18px;
     background: var(--surface);
     color: var(--accent2);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--text-micro);
     font-weight: 600;
     border-radius: var(--radius-md);
@@ -284,7 +286,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     color: var(--accent);
     margin-top: 10px;
     font-size: var(--text-xs);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 400;
     letter-spacing: 0.01em;
     text-transform: none;
@@ -623,7 +625,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     background: transparent;
     border: none;
     border-right: 1px solid var(--border);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--font-sans);
   }
   .tab:last-child { border-right: none; }
   .tab:hover { color: var(--text); background: color-mix(in srgb, var(--surface2) 55%, transparent); }
@@ -656,7 +658,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     border-radius: var(--radius-md);
     padding: 14px 18px;
     color: var(--text);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--text-sm);
     outline: none;
     box-shadow: var(--shadow-sm);
@@ -738,7 +740,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   .abstract {
     color: var(--prose-dim);
     font-size: var(--text-2xs);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--font-sans);
     line-height: 1.75;
     max-height: 0;
     overflow: hidden;
@@ -831,7 +833,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     color: var(--muted);
     padding: 8px 16px;
     border-radius: var(--radius-pill);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--text-micro);
     font-weight: 600;
     letter-spacing: 0.03em;
@@ -871,7 +873,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     color: var(--text);
     padding: 8px 14px;
     border-radius: var(--radius-pill);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: var(--font-sans);
     font-size: var(--text-micro);
     font-weight: 600;
     cursor: pointer;
