@@ -882,6 +882,48 @@
   .filter-section--search .chip-row {
     margin-bottom: 14px;
   }
+  /* Snelzoeken: zelfde pill als .intro-search-term (DM Mono, accent, chip-accent kleuren) */
+  .filter-section--search .chip-row:not(.theme-filter-row) .chip:not(.theme-chip):not(.chip--all):not(.active):not([aria-pressed="true"]) {
+    font-family: 'DM Mono', monospace;
+    font-size: var(--text-micro);
+    font-weight: 400;
+    color: var(--accent);
+    background: var(--chip-accent-bg);
+    border: 1px solid var(--chip-accent-border);
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    box-shadow: none;
+    transform: none;
+  }
+  .filter-section--search .chip-row:not(.theme-filter-row) .chip:not(.theme-chip):not(.chip--all):not(.active):not([aria-pressed="true"]):hover {
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--chip-accent-border));
+    background: color-mix(in srgb, var(--chip-accent-bg) 90%, var(--accent) 10%);
+    box-shadow: var(--shadow-sm);
+    transform: none;
+  }
+  .filter-section--search .chip-row:not(.theme-filter-row) .chip:not(.theme-chip):not(.chip--all).active,
+  .filter-section--search .chip-row:not(.theme-filter-row) .chip:not(.theme-chip):not(.chip--all)[aria-pressed="true"] {
+    font-family: 'DM Mono', monospace;
+    font-size: var(--text-micro);
+    font-weight: 400;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--chip-accent-bg) 72%, var(--accent) 28%);
+    border: 1px solid color-mix(in srgb, var(--accent) 55%, var(--chip-accent-border));
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-md);
+    transform: none;
+  }
+  /* “Alles tonen”: zelfde typografie en padding als overige snelzoek-chips */
+  .filter-section--search .chip-row:not(.theme-filter-row) .chip.chip--all,
+  .filter-section--search .chip-row:not(.theme-filter-row) .chip.chip--all:hover,
+  .filter-section--search .chip-row:not(.theme-filter-row) .chip.chip--all.active,
+  .filter-section--search .chip-row:not(.theme-filter-row) .chip.chip--all[aria-pressed="true"] {
+    font-family: 'DM Mono', monospace;
+    font-size: var(--text-micro);
+    font-weight: 400;
+    padding: 6px 12px;
+  }
   .filter-section--search .filter-row {
     margin-top: 0;
     margin-bottom: 0;
