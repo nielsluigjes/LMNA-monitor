@@ -34,8 +34,8 @@
   margin-top: 20px;
 }
 .ds-swatches--brand {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  max-width: 42rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  max-width: 56rem;
 }
 @media (max-width: 560px) {
   .ds-swatches--brand {
@@ -210,6 +210,7 @@ body.ds-body-split {
   --link-muted-underline: color-mix(in srgb, var(--accent2) 34%, transparent);
   --theme-chip-border: color-mix(in srgb, var(--accent2) 38%, var(--border));
   --logo-glow: color-mix(in srgb, var(--accent) 12%, transparent);
+  --moss: color-mix(in srgb, var(--text) 68%, var(--accent) 32%);
 }
 .ds-split__col--day[data-theme="light"] .ds-split__banner {
   color: var(--text);
@@ -222,7 +223,17 @@ body.ds-body-split {
     radial-gradient(ellipse 70% 45% at 50% 110%, color-mix(in srgb, var(--accent3) 4%, transparent), transparent 55%);
 }
 .ds-split__col--day[data-theme="light"] .logo-block h1 {
+  color: var(--moss);
   text-shadow: none;
+}
+.ds-split__col--day[data-theme="light"] .last-updated span {
+  color: var(--moss);
+}
+.ds-split__col--day[data-theme="light"] .card-title-text {
+  color: var(--moss);
+}
+.ds-split__col--day[data-theme="light"] a.card.card--link:hover .card-title-text {
+  color: var(--accent);
 }
 .ds-split__col--night .intro-disclaimer-section:not(.intro-disclaimer-section--footer) > .intro-disclaimer {
   color: var(--bg);
@@ -231,10 +242,10 @@ body.ds-body-split {
   background: var(--insights-bg);
 }
 .ds-split__col--day[data-theme="light"] .intro-disclaimer-section--footer > .intro-disclaimer {
-  color: var(--band-text);
+  color: var(--accent);
 }
 .ds-split__col--day[data-theme="light"] .intro-disclaimer-section--footer > .intro-disclaimer.intro-disclaimer--medical {
-  color: var(--band-text);
+  color: var(--surface2);
 }
 .ds-split__col--day[data-theme="light"] .theme-cluster {
   background: var(--surface);
@@ -254,12 +265,17 @@ body.ds-body-split {
 .ds-split__col--night .theme-cluster[data-theme="imaging"] .theme-cluster-title-btn {
   color: color-mix(in srgb, var(--theme-cat-imaging) 76%, #fff 24%);
 }
-/* Day-kolom: globale html:not-regels zijn van toepassing omdat <html> geen data-theme heeft */
+/* Day-kolom: <html> heeft geen data-theme; zelfde mosband als dashboard */
+.ds-split__col--day[data-theme="light"] .intro-disclaimer-section:not(.intro-disclaimer-section--footer) {
+  background: var(--moss);
+  border-bottom-color: color-mix(in srgb, #000000 20%, var(--moss));
+}
 .ds-split__col--day[data-theme="light"] .intro-disclaimer-section:not(.intro-disclaimer-section--footer) > .intro-disclaimer {
-  color: var(--band-text);
+  color: var(--accent);
 }
 .ds-split__col--day[data-theme="light"] .intro-disclaimer-section--footer {
-  background: var(--band-accent-bg);
+  background: var(--moss);
+  border-top-color: color-mix(in srgb, #000000 20%, var(--moss));
 }
 .ds-split__col--day[data-theme="light"] .theme-cluster[data-theme="dcm"] .theme-cluster-title-btn {
   color: var(--theme-cat-dcm);
