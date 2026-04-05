@@ -80,6 +80,8 @@ html[data-theme="light"] {
   /* Rand om .site-shell: neutraal; geen mint — banners gebruiken nog --band-accent-bg */
   --outer-bg: var(--bg);
   /* themakleuren erven van :root — zelfde in day/night */
+  /* Logo / meta + top-disclaimerstrip: gedempt mosgroen (tussen donkergroen en mint) */
+  --moss: color-mix(in srgb, var(--text) 68%, var(--accent) 32%);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html {
@@ -203,6 +205,7 @@ header {
   text-shadow: 0 0 48px var(--logo-glow);
 }
 html[data-theme="light"] .logo-block h1 {
+  color: var(--moss);
   text-shadow: none;
 }
 .logo-block p {
@@ -229,6 +232,9 @@ html[data-theme="light"] .logo-block h1 {
   color: var(--accent);
   font-size: var(--text-micro);
   margin-top: 2px;
+}
+html[data-theme="light"] .last-updated span {
+  color: var(--moss);
 }
 .theme-toggle {
   display: inline-flex;
@@ -325,9 +331,16 @@ html[data-theme="light"] .theme-toggle__moon { display: inline-flex; }
   max-width: 100% !important;
   font-variant: normal;
 }
-/* Alleen night: donkergroene tekst op de band; day blijft --band-text (wit) */
+/* Night: donkergroene tekst op mintband; day: vol mosgroen + felgroen tekst */
 html:not([data-theme="light"]) .intro-disclaimer-section:not(.intro-disclaimer-section--footer) > .intro-disclaimer {
   color: var(--bg);
+}
+html[data-theme="light"] .intro-disclaimer-section:not(.intro-disclaimer-section--footer) {
+  background: var(--moss);
+  border-bottom-color: color-mix(in srgb, #000000 20%, var(--moss));
+}
+html[data-theme="light"] .intro-disclaimer-section:not(.intro-disclaimer-section--footer) > .intro-disclaimer {
+  color: var(--accent);
 }
 .intro-disclaimer-section--footer {
   flex-direction: column;
@@ -338,9 +351,13 @@ html:not([data-theme="light"]) .intro-disclaimer-section:not(.intro-disclaimer-s
   padding-top: 40px;
   padding-bottom: 40px;
 }
-/* Night: zelfde vlak als main; day: erft --band-accent-bg van .intro-disclaimer-section */
+/* Night: zelfde vlak als main; day: vol mosgroen + felgroene tekst */
 html:not([data-theme="light"]) .intro-disclaimer-section--footer {
   background: var(--insights-bg);
+}
+html[data-theme="light"] .intro-disclaimer-section--footer {
+  background: var(--moss);
+  border-top-color: color-mix(in srgb, #000000 20%, var(--moss));
 }
 .intro-disclaimer-section--footer > .intro-disclaimer {
   text-transform: none !important;
@@ -349,10 +366,10 @@ html:not([data-theme="light"]) .intro-disclaimer-section--footer {
   color: var(--prose);
 }
 html[data-theme="light"] .intro-disclaimer-section--footer > .intro-disclaimer {
-  color: var(--band-text);
+  color: var(--accent);
 }
 html[data-theme="light"] .intro-disclaimer-section--footer > .intro-disclaimer.intro-disclaimer--medical {
-  color: var(--band-text);
+  color: var(--surface2);
 }
 .intro-disclaimer-section--footer > .intro-disclaimer.intro-disclaimer--medical {
   font-weight: 700 !important;
@@ -648,6 +665,15 @@ a.card.card--link:hover .card-title {
   color: var(--text);
   line-height: 1.4;
   flex: 1;
+}
+.card-title-text {
+  font-weight: 500;
+}
+html[data-theme="light"] .card-title-text {
+  color: var(--moss);
+}
+html[data-theme="light"] a.card.card--link:hover .card-title-text {
+  color: var(--accent);
 }
 .title-link-wrap {
   display: inline-flex;
