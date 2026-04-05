@@ -7,13 +7,15 @@
   --shadow-md: 0 1px 0 rgba(255,255,255,0.05) inset, 0 12px 40px rgba(0,0,0,0.35);
   --shadow-hover: 0 1px 0 rgba(255,255,255,0.06) inset, 0 16px 48px rgba(0,0,0,0.4);
   /* Merkpalet: 01 donkergroen/mint; 02 grijzen + steun; 03 accent per functie */
+  /* Lichtgroen — vaste merkleur (#c4f2d7); in day-theme ook --surface2 */
+  --brand-light-green: #c4f2d7;
   --bg: #002520;
   --surface: #04332d;
   --surface2: #0a4038;
   --surface-elevated: #0f4d42;
   --border: rgba(82, 196, 138, 0.1);
   /* Primair: mint; secundair: lichtblauw (info); tertiair: lichtoranje (aandacht) */
-  --accent: #52c48a;
+  --accent: #19ce72;
   --accent2: #90c8e9;
   --accent3: #f9c48b;
   --danger: #f39b8b;
@@ -365,6 +367,10 @@ html[data-theme="light"] .intro-disclaimer-section--footer {
   font-variant: normal;
   color: var(--prose);
 }
+.intro-disclaimer-section--footer > .intro-disclaimer:not(.intro-disclaimer--medical) {
+  font-size: var(--text-micro);
+  line-height: 1.5;
+}
 html[data-theme="light"] .intro-disclaimer-section--footer > .intro-disclaimer {
   color: var(--accent);
 }
@@ -379,6 +385,11 @@ html[data-theme="light"] .intro-disclaimer-section--footer > .intro-disclaimer.i
   line-height: 1.45 !important;
   color: var(--accent);
 }
+/* Night: footer-bodytekst in merk-lichtgroen; .ds-split__col--night = design-system alleen */
+html:not([data-theme="light"]) body:not(.ds-body-split) .intro-disclaimer-section--footer > .intro-disclaimer:not(.intro-disclaimer--medical),
+html:not([data-theme="light"]) body.ds-body-split .ds-split__col--night .intro-disclaimer-section--footer > .intro-disclaimer:not(.intro-disclaimer--medical) {
+  color: var(--brand-light-green);
+}
 .intro-disclaimer-section--footer .intro-disclaimer a {
   color: inherit;
   text-decoration: underline;
@@ -388,6 +399,13 @@ html[data-theme="light"] .intro-disclaimer-section--footer > .intro-disclaimer.i
   color: var(--prose);
   font-size: var(--text-xs);
   line-height: 1.55;
+}
+/* Fel groen = merk-accent (--accent), zie design-system.html */
+.intro p.intro-lead--scope {
+  margin-top: 14px;
+  margin-bottom: 0;
+  color: var(--accent);
+  font-weight: 600;
 }
 .intro-details {
   margin-top: 16px;
@@ -529,12 +547,12 @@ html[data-theme="light"] .intro-disclaimer-section--footer > .intro-disclaimer.i
   transform: translateY(-1px);
 }
 .stat-num {
-  font-family: 'Fraunces', serif;
+  font-family: 'DM Mono', 'Courier New', Courier, monospace;
   font-size: clamp(2.25rem, 4vw, 2.85rem);
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
   color: var(--text);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 .stat-num.green { color: var(--accent); }
 .stat-label {
@@ -701,6 +719,7 @@ html[data-theme="light"] a.card.card--link:hover .card-title-text {
 .card-date {
   color: var(--muted);
   font-size: var(--text-micro);
+  font-family: 'DM Mono', 'Courier New', Courier, monospace;
   white-space: nowrap;
   flex-shrink: 0;
 }
