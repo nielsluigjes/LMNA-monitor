@@ -14,6 +14,14 @@ from pathlib import Path
 
 from insight_engine import enrich_all
 
+# Zelfde YYYY-Mon-stijl als publicatiekaarten (pub_date uit scraper / PubMed).
+_EN_MONTH = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+def _format_last_updated(dt: datetime) -> str:
+    return f"{dt.year}-{_EN_MONTH[dt.month - 1]}-{dt.day:02d} {dt.hour:02d}:{dt.minute:02d}"
+
+
 DB_PATH   = Path(__file__).parent / "lmna.db"
 OUT_PATH  = Path(__file__).parent / "dashboard.html"
 
@@ -47,7 +55,7 @@ def load_data():
         "total_trials": con.execute("SELECT COUNT(*) FROM trials").fetchone()[0],
         "recruiting": con.execute("SELECT COUNT(*) FROM trials WHERE status='RECRUITING'").fetchone()[0],
         "total_news": con.execute("SELECT COUNT(*) FROM news").fetchone()[0],
-        "last_updated": datetime.now().strftime("%d-%m-%Y %H:%M"),
+        "last_updated": _format_last_updated(datetime.now()),
     }
     con.close()
     return (
@@ -100,6 +108,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   <h2 id="intro-heading">Voor wie</h2>
   <div class="intro-lead-align">
   <p class="intro-lead">Voor onderzoekers, patiënten en geïnteresseerden die LMNA-bronnen op één plek willen. Deze pagina toont het resultaat van een dagelijks geautomatiseerde zoekactie naar LMNA-bronnen: nieuws, publicaties en studies. Binnen deze resultaten kan verder gezocht worden naar wat voor jou relevant is.</p>
+  <p class="intro-lead intro-lead--scope">Deze site is een hulpmiddel om op de hoogte te blijven; het is geen volledig overzicht van alles wat ooit over LMNA is gepubliceerd. Binnen vastgelegde zoektermen en tijdsvensters worden automatisch treffers verzameld; er kunnen relevante artikelen of studies ontbreken.</p>
   </div>
   <details class="intro-details">
     <summary>Uitleg: LMNA en het hart, en hoe je hier zoekt</summary>
@@ -110,6 +119,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <ul class="intro-detail-list">
           <li>Het hart kan minder stevig pompen. Dat noemen artsen vaak <strong>dilatatieve cardiomyopathie</strong>, kort <strong>DCM</strong>.</li>
           <li>Of er zijn klachten door een verstoorde <strong>geleiding</strong> van de elektrische prikkel in het hart, of door een <strong>ritmestoornis</strong>.</li>
+        </ul>
+      </section>
+      <section class="intro-detail-section" aria-labelledby="intro-scope-title">
+        <h3 id="intro-scope-title" class="intro-detail-title">Wat je hier wél en niet vindt</h3>
+        <p class="intro-detail-text">Dit overzicht is bedoeld als signaal, niet als uitputtende bron. Zo werkt de verzameling:</p>
+        <ul class="intro-detail-list">
+          <li><strong>Publicaties</strong> komen uit een PubMed-zoekopdracht met een beperkt tijdvenster (ongeveer de laatste twee jaar) en een maximum aantal resultaten.</li>
+          <li><strong>Nieuws</strong> komt uit RSS-feeds: meestal recente berichten, geen volledig archief van alle tijden.</li>
+          <li>Op de pagina worden per onderdeel maximaal honderd items getoond; het totaal is dus <strong>niet uitputtend</strong>. Voor systematisch onderzoek gebruik je databases en vaste zoekstrategieën.</li>
         </ul>
       </section>
       <section class="intro-detail-section" aria-labelledby="intro-search-title">
@@ -209,6 +227,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 <!-- PUBLICATIONS -->
 <div id="panel-publications" class="panel" role="tabpanel" aria-labelledby="tab-publications" hidden>
+  <p class="panel-hint">Publicaties: automatisch uit PubMed op basis van vaste zoektermen en een beperkt recent tijdvenster; geen volledige literatuurlijst.</p>
   <div class="filter-section filter-section--search" aria-labelledby="filter-search-pubs-title">
     <h3 class="filter-section__title" id="filter-search-pubs-title">Zoeken in titel, auteurs en tijdschrift</h3>
     <div class="search-bar">
